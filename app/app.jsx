@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import redux from 'redux';
+import style from 'style-loader';
+import css from 'css-loader';
 // import {Provider} from 'react-redux';
 
 // import reducers from './reducers/index.jsx';
 // const store = redux.createStore(reducer);
-
+import 'bootstrap-loader!bootstrap/dist/css/bootstrap.min.css';
+// require('bootstrap/dist/css/bootstrap.css');
 import Nav from './components/Nav.jsx';
 import HotPage from './components/HotPage.jsx';
 import TrendPage from './components/TrendPage.jsx';
@@ -16,17 +19,7 @@ import Main from './components/Main.jsx';
 ReactDOM.render(
     <Router>
     <div>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/topics">Topics</Link>
-        </li>
-      </ul>
+     <Nav />
 
       <hr />
 

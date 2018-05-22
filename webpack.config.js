@@ -13,15 +13,23 @@ module.exports = {
     // the target directory for all output files
     // must be an absolute path (use the Node.js path module)
 
-    filename: "bundle.js", 
+    filename: "bundle.js",
   },
   module: {
     // configuration regarding modules
 
     rules: [
       // rules for modules (configure loaders, parser options, etc.)
-
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     { loader: "style-loader" },
+      //     { loader: "css-loader" },
+      //     { loader: "bootstrap-loader"}
+      //   ]
+      // },
       {
+        
         test: /\.jsx?$/,
         include: [
           path.resolve(__dirname, "app")
@@ -37,7 +45,7 @@ module.exports = {
         options: {
           presets: ["env", "react"]
         },
-    }
+      }
     ]
-}
+  }
 }

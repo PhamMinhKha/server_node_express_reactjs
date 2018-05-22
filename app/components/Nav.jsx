@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-
-class Nav extends Component{
-    render(){
-        return(
-        <h1>Day la Nav</h1>
+class Nav extends Component {
+    render() {
+        return (
+           <h1>ok</h1>
         )
     }
 }
