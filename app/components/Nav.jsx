@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { Button } from 'reactstrap';
 class Nav extends Component {
     render() {
         return (
-           <h1>ok</h1>
+            <Button color="danger">Danger!</Button>
         )
     }
 }
