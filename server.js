@@ -3,13 +3,14 @@ const server = express();
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const jwt = require('jsonwebtoken');
+const config = require('./config/config');
+
+const schema = require('./config/schemas/schema');
 
 
 server.set('trust proxy', 1) // trust first proxy
 server.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
+  secret: config.secret,
   cookie: {maxAge: 60000 * 60 * 24 * 30 }
 }))
 
@@ -30,7 +31,7 @@ server.get('/*', (req, res)=>{
 })
 server.post('/login', urlencodedParser, (req, res) =>{
     if (!req.body) return res.sendStatus(400)
-  res.send('welcome, ' + req.body.username)
+  res.send('welcome, ' + req.body.txtUserName)
   req.session.user = 'fucking cat';
   console.log(req.session)
   var token = jwt.sign({ foo: 'Minh kha' }, 'shhhhh');

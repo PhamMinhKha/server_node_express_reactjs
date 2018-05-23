@@ -11,21 +11,10 @@ class Login extends Component {
     }
     onChange(e) {
         let control = e.target.name;
-        if (control === 'txtUserName')
-            this.setState({
-                txtUserName: e.target.value
-            })
-        else
-            this.setState({
-                txtPassWord: e.target.value
-            })
-        console.log(this.state);
-    }
-    test(e){
-        let control = e.target.name;
-        this.setState({
-            control : 'xxx',
+        this.setState(...this.state,{
+            [control] : e.target.value
         })
+        console.log(this.state);
     }
     onSubmit(e){
         console.log('====================================');
