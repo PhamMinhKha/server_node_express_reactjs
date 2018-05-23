@@ -38,9 +38,11 @@ class Login extends Component {
         return (
             <div>
                 <h1>this is login</h1>
+                <form method="post" action="/login">
                 <input type="text" name="txtUserName" value={this.state.txtUserName} className="form-control" onChange={this.onChange.bind(this)} />
                 <input type="text" name="txtPassWord" value={this.state.txtPassWord} className="form-control" onChange={this.onChange.bind(this)} />
                 <input type="submit" value="Đăng nhập" onClick={this.onSubmit.bind(this)}/>
+                </form>
             </div>
         )
     }
