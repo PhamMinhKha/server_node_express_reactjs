@@ -8,7 +8,9 @@ server.use(express.static('./public'));
 server.get('/', (req, res)=>{
     res.render('index.ejs')
 })
-
+server.get('/*', (req, res)=>{
+    res.render('index.ejs')
+})
 server.listen(3000, function(){
     console.log('Server Start Port 3000')
 })

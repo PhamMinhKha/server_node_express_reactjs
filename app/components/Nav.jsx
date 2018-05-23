@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
-class Nav extends Component {
+import { Link } from "react-router-dom";
+import { Button, Nav, NavItem } from 'reactstrap';
+class Menu extends Component {
     render() {
         return (
-            <Button color="danger">Danger!</Button>
+            <div>
+                <p>List Based</p>
+                <Nav>
+                    <NavItem>
+                        <Link to="/login">Đăng nhập</Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link to="#">Link</Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link to="#">Another Link</Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link disabled to="#">Disabled Link</Link>
+                    </NavItem>
+                </Nav>
+                <hr />
+            </div>
         )
     }
 }
-export default Nav;
+export default Menu;
