@@ -39,6 +39,6 @@ server.post('/login', urlencodedParser, (req, res) =>{
   var decoded = jwt.verify(token, 'shhhhh');
     console.log(decoded.foo) // bar
 })
-server.listen(3000, function(){
+server.listen(process.env.PORT || 3000, function(){
     console.log('Server Start Port 3000')
 })
