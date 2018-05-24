@@ -24,7 +24,7 @@ server.set('views', './views');
 server.use(express.static('./public'));
 
 server.get('/', (req, res)=>{
-    res.render('trangchu.ejs')
+    res.render('index.ejs')
 })
 server.get('/*', (req, res)=>{
     res.render('index.ejs')
