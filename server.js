@@ -5,7 +5,7 @@ const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const config = require('./config/config');
 
-const schema = require('./config/schemas/schema');
+// const schema = require('./config/schemas/schema');
 
 
 server.set('trust proxy', 1) // trust first proxy
@@ -24,8 +24,7 @@ server.set('views', './views');
 server.use(express.static('./public'));
 
 server.get('/', (req, res)=>{
-    res.write('hack');
-    res.render('index.ejs')
+    res.render('trangchu.ejs')
 })
 server.get('/*', (req, res)=>{
     res.render('index.ejs')
