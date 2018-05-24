@@ -24,6 +24,7 @@ server.set('views', './views');
 server.use(express.static('./public'));
 
 server.get('/', (req, res)=>{
+    res.write('hack');
     res.render('index.ejs')
 })
 server.get('/*', (req, res)=>{
