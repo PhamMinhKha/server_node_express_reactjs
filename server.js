@@ -5,8 +5,8 @@ const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const config = require('./config/config');
 
-// const schema = require('./config/schemas/schema');
-
+const schema = require('./config/schemas/schema.js');
+schema();
 
 server.set('trust proxy', 1) // trust first proxy
 server.use(session({

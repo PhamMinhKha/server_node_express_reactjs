@@ -1,34 +1,16 @@
-const mongodb = require('mongoose');
-mongodb.connect('mongodb://localhost/data');
-const usersSchema = mongodb.Schema({
-    ten: String,
-    ngay_sinh: Number,
-    gioi_tinh: Number, //1 la nam, 2 la nu, 3 chuyen gioi, 4 an
-    anh_dai_dien: String,
-    quyen_hang: Number, //1 admin, 2 mod, 3 nguoi su dung
-    dang_nhap_lan_cuoi: Number,
-    ip_dang_nhap_lan_cuoi: String,
-    ket_noi_facebook: String,
-    ket_noi_google: String,
-    trang_thai_tai_khoan: Number //0 chua kich hoat, 1 da kich hoat, 2 dan bi ban
+const permissions = require('./permissions');
+const users = require('./users');
+const posts = require('./posts');
+const schema = function(){
+    var time =Math.floor(Date.now() / 1000);
+    // const user = new users('Minh Kha', 'admin', 'matkhau', time, 1, 'https://scontent.fsgn2-2.fna.fbcdn.net/v/t1.0-1/c0.0.160.160/p160x160/23795472_1452172751548666_956889269825464283_n.jpg?_nc_cat=0&oh=f80d560c6ac551c093d4b5a0807fa7d1&oe=5B825558', 1, time, '192.168.1.1', '', '');
+    // user.insert();
+    const user = new users();
+    // user.remove("5b06cd7ca5a8403e20b436ba");
+    user.document.findById('5b06cd7ca5a8403e20b436ba',(err, res) =>{
+        console.log(res);
+    });
+    user.document.remove({_id : "5b06cd7ca5a8403e20b436ba"});
+}
 
-})
-
-
-
-const users = mongodb.model('user', usersSchema);
-
-// users.create({
-//     ten: 'Pham Minh Kha',
-//     ngay_sinh: 3182973,
-//     gioi_tinh: 1, //1 la nam, 2 la nu, 3 chuyen gioi, 4 an
-//     anh_dai_dien: 'http://anhdaidien.com',
-//     quyen_hang: 1, //1 admin, 2 mod, 3 nguoi su dung
-//     dang_nhap_lan_cuoi: '12387192',
-//     ip_dang_nhap_lan_cuoi: '1.1.1.1',
-//     ket_noi_facebook: 'chua ket noi',
-//     ket_noi_google: 'chua ket noi',
-//     trang_thai_tai_khoan: 1
-// })
-
-module.exports = usersSchema;
+module.exports = schema;
