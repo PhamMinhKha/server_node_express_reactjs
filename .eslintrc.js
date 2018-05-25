@@ -1,4 +1,5 @@
 module.exports = {
+    "extends" : "rallycoding",
     "parserOptions": {
         "ecmaVersion": 9,
         "ecmaFeatures": {

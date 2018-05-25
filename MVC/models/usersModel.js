@@ -53,5 +53,11 @@ class users extends mongodb{
             console.log(data);
         })
     }
+    login(ten_dang_nhap = String, callback){
+        this.document.findOne({ ten_dang_nhap }, function (err, docs) {
+            return callback(docs)
+          });
+          
+    }
 }
 module.exports = users;

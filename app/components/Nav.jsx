@@ -11,13 +11,13 @@ class Menu extends Component {
                         <Link to="/login">Đăng nhập</Link>
                     </NavItem>
                     <NavItem>
-                        <Link to="#">Link</Link>
+                        <Link to="/">Trang chủ</Link>
                     </NavItem>
                     <NavItem>
-                        <Link to="#">Another Link</Link>
+                        <Link to="/Trend">Another Link</Link>
                     </NavItem>
                     <NavItem>
-                        <Link disabled to="#">Disabled Link</Link>
+                        <Link to="New">Disabled Link</Link>
                     </NavItem>
                 </Nav>
                 <hr />
