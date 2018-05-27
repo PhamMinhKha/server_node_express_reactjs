@@ -16,7 +16,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Nav from './components/Nav.jsx';
 import HotPage from './components/HotPage.jsx';
 import TrendPage from './components/TrendPage.jsx';
-import NewPage from './components/NewPage.jsx';
+import NewPage from './components/pages/NewPage.jsx';
 import Main from './components/Main.jsx';
 import Login from './components/pages/Login.jsx';
 
@@ -28,7 +28,7 @@ ReactDOM.render(
       <hr />
       <Route exact path="/" component={Main} />
       <Route path="/login" component={Login} />
-      <Route path="/topics" component={NewPage} />
+      <Route path="/new" component={NewPage} />
     </div>
   </Router>
   </Provider>

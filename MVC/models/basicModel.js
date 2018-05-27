@@ -1,21 +1,7 @@
 const mongodb = require('mongoose');
 const config = require('./../../config/config');
-mongodb.connect(config.connectdb);
+mongodb.connect(config.connectdb).then(()=>console.log('connect success mongo'));
 
-class basicModel {
-    constructor()
-    {
-        // this.config = config;
-        // this.mongodb = mongodb;
-        
-    }
-    Schema(data = JSON)
-    {
-        return mongodb.Schema(data);
-    }
-    Model(Collection = String, Schema = mongodb.Types.Schema)
-    {
-        return mongodb.model(Collection, Schema);
-    }
-}
-module.exports = basicModel;
+mongodb.Promise = global.Promise;
+var db = mongodb.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));

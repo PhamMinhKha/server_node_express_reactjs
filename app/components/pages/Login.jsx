@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 class Login extends Component {
     constructor(props) {
@@ -9,6 +10,7 @@ class Login extends Component {
             txtPassWord: ''
         }
     }
+  
     onChange(e) {
         let control = e.target.name;
         this.setState(...this.state,{
@@ -17,11 +19,13 @@ class Login extends Component {
         console.log(this.state);
     }
     onSubmit(e){
-        console.log('====================================');
-        console.log(this.props.items);
-        console.log('====================================');
-        this.props.Dang_Nhap(this.state.txtUserName);
-        this.props.Dang_xuat('ok');
+        e.preventDefault();
+        axios.post('/login', this.state)
+        .then((res) => {
+            if(res.data === true){
+                this.props.Dang_Nhap(this.state.txtUserName)
+            }
+        });
     }
     render() {
         return (
