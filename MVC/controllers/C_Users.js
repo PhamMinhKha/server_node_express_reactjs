@@ -39,7 +39,7 @@ exports.xuLyLogin = async (req, res) => {
     let userPromise = CM_xuLyLogin(txtUserName);
     var user = await userPromise.then((userInfo) => {
         return userInfo;
-    }, err => {console.log(err + ''); res.send(false)});
+    }, err => { res.send(false)});
     if(user)
     this.comparePassword(txtPassWord, user.mat_khau, (err, match) => {
         if (err)
@@ -82,3 +82,13 @@ exports.comparePassword = function (plainPass, hashword, callback) {
             callback(err);
     });
 };
+exports.test = (req, res) =>{
+    res.send(
+        `
+        <form method="post" action="/dangnhap">
+        <input type="text" name="username"/>
+        <input type="text" name="password"/>
+        <button>submit</button>
+        </form>`
+    );
+}
