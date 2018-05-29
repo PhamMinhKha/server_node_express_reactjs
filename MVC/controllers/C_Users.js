@@ -64,6 +64,14 @@ exports.xuLyLogin = async (req, res) => {
     })
 
 }
+exports.token = function(user){
+    let token = jwt.sign({
+        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 15),
+        // exp: Math.floor(Date.now() / 1000) + (10),
+        data: user
+    }, 'a7612khASFSD');
+    return token;
+}
 exports.cryptPassword = function (password, callback) {
     bcrypt.genSalt(10, function (err, salt) {
         if (err)

@@ -8,7 +8,7 @@ var passport = require('passport'),
 var jsonParser = bodyParser.json();
 // create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({
-  extended: false
+  extended: true
 });
 
 // Require controller modules.
@@ -28,13 +28,27 @@ router.route('/login').get(Users.login)
 //   successRedirect: '/',
 //   failureRedirect: '/ok'
 // }), Users.login);
-router.route('/login').post(passport.authenticate('local', {
-  successRedirect: '/ok',
-  failureRedirect: '/fuck'
-}));
+router.route('/login').post(function (req, res, next) {
+  passport.authenticate('loginUsers', function (err, user, info) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.json({detail: info});
+    }
+    req.logIn(user, function (err) {
+      if (err) {
+        return next(err);
+      }
+      return res.json({
+        detail: info
+      });
+    });
+  })(req, res, next);
+});
 router.route('/dangnhap').get(Users.test);
-router.route('/dangnhap').post(passport.authenticate('local', {
-  successRedirect: '/ok',
+router.route('/dangnhap').post(jsonParser, passport.authenticate('loginUsers', {
+  // successRedirect: '/ok',
   failureRedirect: '/fuck'
 }));
 // router.route('/ok').get((req, res)=>{
@@ -44,7 +58,7 @@ router.route('/dangnhap').post(passport.authenticate('local', {
 //     else res.send('da dang nhap');
 // })
 router.get('/ok', ensureAuthenticated, (req, res) => {
-  console.log(req.session);
+  // console.log(req.session);
 
   res.send('ok')
 })
@@ -53,36 +67,39 @@ router.route('/checklogin').post(jsonParser, Users.checkLogin);
 router.route('/New').get(New.Index).post(New.Index);
 router.route('/LuuAnh').post(jsonParser, New.luuAnh);
 router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
-const user = {
-  username: 'test-user',
-  passwordHash: 'bcrypt-hashed-password',
-  id: 1
-}
-passport.use(new Strategy(
-  function (txtUserName, txtPassWord, done) {
-    console.log(txtUserName);
+
+passport.use('loginUsers', new Strategy(
+  function (username, password, done) {
     dbuser.findOne({
-      ten_dang_nhap: txtUserName
+      ten_dang_nhap: username
     }, function (err, user) {
-      console.log(txtUserName)
       if (err) {
         return done(err);
       }
       if (!user) {
-        console.log('da vao day');
         return done(null, false, {
           message: 'Incorrect username.'
         });
-      } else {
-        return done(null, user)
-        console.log('da vao day');
       }
-
+      Users.comparePassword(password, user.mat_khau, (err, data) => {
+        if (err) return done(null, false, {
+          message: 'Incorrect password.'
+        });
+        else {
+          if (data)
+            return done(null, user, {message: true,
+              ten_dang_nhap: user.ten_dang_nhap,
+            });
+          else
+            return done(null, false, {
+              message: 'Sai Mật Khẩu'
+            })
+        }
+      })
     });
   }
 ));
 passport.serializeUser((user, done) => {
-  console.log(user.ten_dang_nhap)
   done(null, user.ten_dang_nhap);
 })
 
@@ -93,11 +110,10 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 passport.deserializeUser(function (user, done) {
-  console.log('thanh cong');
+  // console.log('thanh cong');
   dbuser.findOne({
     ten_dang_nhap: user
   }, function (err, user) {
-    console.log('thanh cong');
     done(err, user);
   });
 });

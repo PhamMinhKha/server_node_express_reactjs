@@ -14,5 +14,5 @@ var Schema =  mongoose.Schema({
             ket_noi_google: String,
             trang_thai_tai_khoan: Number //0 chua kich hoat, 1 da kich hoat, 2 dan bi ban
         })
-   
+
 module.exports = mongoose.model('users', Schema);

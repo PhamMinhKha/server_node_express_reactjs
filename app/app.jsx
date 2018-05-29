@@ -14,20 +14,20 @@ const store = createStore(
 
 import 'bootstrap/dist/css/bootstrap.css';
 import Nav from './components/Nav.jsx';
-import HotPage from './components/HotPage.jsx';
+import HomePage from './components/pages/HomePage.jsx';
 import TrendPage from './components/TrendPage.jsx';
 import NewPage from './components/pages/NewPage.jsx';
 import Main from './components/Main.jsx';
-import Login from './components/pages/Login.jsx';
+import LoginPage from './components/pages/LoginPage.jsx';
+import './css/custom.css';
 
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider store={store} >
     <Router>
     <div>
-     <Nav />
-      <hr />
-      <Route exact path="/" component={Main} />
-      <Route path="/login" component={Login} />
+     <Nav/>
+      <Route exact path="/" component={HomePage} />
+      <Route path="/login" component={LoginPage} />
       <Route path="/new" component={NewPage} />
     </div>
   </Router>

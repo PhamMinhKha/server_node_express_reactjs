@@ -29,7 +29,6 @@ class navBar extends Component {
         });
       }
     render() {
-        console.log(Material);
         let isLogin = this.props.items.Login;
         return (
             <div>
@@ -39,7 +38,7 @@ class navBar extends Component {
               <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="" navbar>
                   <NavItem>
-                    <NavLink href="/components/">Trang Chủ</NavLink>
+                    <Link className="nav-link" to="/">Trang Chủ</Link>
                   </NavItem>
                   <NavItem>
                     <NavLink href="https://github.com/reactstrap/reactstrap">Xu Hướng</NavLink>
@@ -58,7 +57,7 @@ class navBar extends Component {
       </InputGroup> </NavLink>
                   </NavItem>
                   <NavItem>
-                    <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+                    {(!isLogin) ? (<Link className ="nav-link" to="/login">Login</Link>): (<Link className ="nav-link" to="/profile">{isLogin}</Link>)}
                   </NavItem>
                   <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret>
