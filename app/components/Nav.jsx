@@ -32,7 +32,7 @@ class navBar extends Component {
         let isLogin = this.props.items.Login;
         return (
             <div>
-            <Navbar color="light" light expand="md">
+            <Navbar color="dark" dark expand="md">
               <NavbarBrand href="/">TéGhé.Fun</NavbarBrand>
               <NavbarToggler onClick={this.toggle} />
               <Collapse isOpen={this.state.isOpen} navbar>

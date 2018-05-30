@@ -34,22 +34,26 @@ router.route('/login').post(function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.json({detail: info});
+      return res.json({
+        detail: info
+      });
     }
     req.logIn(user, function (err) {
       if (err) {
         return next(err);
+      } else {
+        req.session.token = info.token;
+        return res.json({
+          detail: info
+        });
       }
-      return res.json({
-        detail: info
-      });
     });
   })(req, res, next);
 });
-router.route('/dangnhap').get(Users.test);
+
 router.route('/dangnhap').post(jsonParser, passport.authenticate('loginUsers', {
   // successRedirect: '/ok',
-  failureRedirect: '/fuck'
+  // failureRedirect: '/fuck'
 }));
 // router.route('/ok').get((req, res)=>{
 //     console.log(req.isAuthenticated());
@@ -66,6 +70,7 @@ router.get('/ok', ensureAuthenticated, (req, res) => {
 router.route('/checklogin').post(jsonParser, Users.checkLogin);
 router.route('/New').get(New.Index).post(New.Index);
 router.route('/LuuAnh').post(jsonParser, New.luuAnh);
+// router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
 router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
 
 passport.use('loginUsers', new Strategy(
@@ -78,17 +83,19 @@ passport.use('loginUsers', new Strategy(
       }
       if (!user) {
         return done(null, false, {
-          message: 'Incorrect username.'
+          message: 'Tài khoản này không tồn tại!'
         });
       }
       Users.comparePassword(password, user.mat_khau, (err, data) => {
         if (err) return done(null, false, {
-          message: 'Incorrect password.'
+          message: 'Mật khẩu không đúng!'
         });
         else {
           if (data)
-            return done(null, user, {message: true,
+            return done(null, user, {
+              message: true,
               ten_dang_nhap: user.ten_dang_nhap,
+              token: Users.token(user)
             });
           else
             return done(null, false, {
@@ -99,6 +106,7 @@ passport.use('loginUsers', new Strategy(
     });
   }
 ));
+
 passport.serializeUser((user, done) => {
   done(null, user.ten_dang_nhap);
 })
@@ -110,25 +118,29 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 passport.deserializeUser(function (user, done) {
-  // console.log('thanh cong');
   dbuser.findOne({
     ten_dang_nhap: user
   }, function (err, user) {
     done(err, user);
   });
 });
-// server.get('/', (req, res)=>{
-//     res.render('index.ejs')
-// })
-// router.get('/*', HotPage.index);
-// server.post('/login', urlencodedParser, (req, res) =>{
-//     if (!req.body) return res.sendStatus(400)
-//   res.send('welcome, ' + req.body.txtUserName)
-//   req.session.user = 'fucking cat';
-//   console.log(req.session)
-//   var token = jwt.sign({ foo: 'Minh kha' }, 'shhhhh');
-//   console.log(token)
-//   var decoded = jwt.verify(token, 'shhhhh');
-//     console.log(decoded.foo) // bar
-// })
+
+function requireAdmin(req, res, next) {
+  Users.checkLogin(req, res, (status, data) => {
+    if (status) {
+      if (data.data.quyen_hang === 1){
+        debugger;
+        return next();}
+      else res.render('404', {
+        url: req.url
+      });
+    } else res.render('404', {
+      url: req.url
+    });
+  })
+
+
+}
+
+
 module.exports = router;

@@ -26,12 +26,14 @@ server.use(passport.session());
 server.use('/', router);
 // server.use('/*', router);
 
-
 server.set('view engine', 'ejs');
 server.set('views', './MVC/views');
 server.use(express.static('./public'));
 
+server.use(function(req, res, next) {
+  res.status(404).render('404', {url : req.url});
+});
 
 server.listen(process.env.PORT || 4000, function(){
-    console.log('Server Start Port 3000')
+    console.log('Server Start Port 4000')
 })

@@ -19,6 +19,8 @@ import TrendPage from './components/TrendPage.jsx';
 import NewPage from './components/pages/NewPage.jsx';
 import Main from './components/Main.jsx';
 import LoginPage from './components/pages/LoginPage.jsx';
+//admin page
+import fetch9Gag from './components/pages/admin/fetch9Gag.jsx';
 import './css/custom.css';
 
 ReactDOM.render(
@@ -29,6 +31,7 @@ ReactDOM.render(
       <Route exact path="/" component={HomePage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/new" component={NewPage} />
+      <Route path="/fetch9Gag" component={fetch9Gag} />
     </div>
   </Router>
   </Provider>

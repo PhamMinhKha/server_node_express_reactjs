@@ -18,18 +18,19 @@ let CM_xuLyLogin = (txtUserName) => {
         })
     })
 }
-exports.checkLogin = (req, res) => {
+exports.checkLogin = (req, res, callback) => {
     if(req.session.token)
     {
         jwt.verify(req.session.token, 'a7612khASFSD', function(err, decoded) {
             if (err) {
-                res.send(false)
-            }
-            else res.send(true);
+                return callback(false, null);
+            }else{
+            return callback(true, decoded);}
           });
         
     }
-    else res.send(false);
+    else
+    return callback(false, null);
 }
 exports.xuLyLogin = async (req, res) => {
     let {
@@ -65,6 +66,7 @@ exports.xuLyLogin = async (req, res) => {
 
 }
 exports.token = function(user){
+    user.mat_khau = 'chắc dễ ăn lắm kaka';
     let token = jwt.sign({
         exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 15),
         // exp: Math.floor(Date.now() / 1000) + (10),

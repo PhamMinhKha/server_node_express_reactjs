@@ -13,7 +13,7 @@ exports.luuAnh = function(req, res) {
     
 }
 exports.Index = function (req, res) {
-    console.log(req.method)
+    // console.log(req.method)
     if(req.method === "GET"){
         res.render('index.ejs');
     }
@@ -32,7 +32,7 @@ exports.Index = function (req, res) {
           
        
         // console.log(data);
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         // console.log('body:', body); // Print the HTML for the Google homepage.
         res.send(data);
     });
