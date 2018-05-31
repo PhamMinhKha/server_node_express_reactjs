@@ -32,6 +32,7 @@
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.1.2",
     "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
     "passport-local": "^1.0.0",
     "popper.js": "^1.14.3",
     "qs": "^6.5.2",
@@ -50,6 +51,7 @@
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "bootstrap-loader": "^2.2.0",

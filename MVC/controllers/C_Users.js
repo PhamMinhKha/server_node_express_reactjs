@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const mongodb = require('./../models/basicModel');
 const usersModel = require('./../models/usersModel');
 const jwt = require('jsonwebtoken');
-
+const saveFile = require('./../utilities/saveFile');
 
 exports.login = (req, res) => {
     res.render('index');
@@ -31,6 +31,20 @@ exports.checkLogin = (req, res, callback) => {
     }
     else
     return callback(false, null);
+}
+exports.checkLoginAxios = (req, res, callback) => {
+    if(req.session.token)
+    {
+        jwt.verify(req.session.token, 'a7612khASFSD', function(err, decoded) {
+            if (err) {
+                return res.send(false);
+            }else{
+            return res.json(decoded)}
+          });
+        
+    }
+    else
+    return res.send(false);
 }
 exports.xuLyLogin = async (req, res) => {
     let {
@@ -75,7 +89,7 @@ exports.token = function(user){
     return token;
 }
 exports.cryptPassword = function (password, callback) {
-    bcrypt.genSalt(10, function (err, salt) {
+   bcrypt.genSalt(10, function (err, salt) {
         if (err)
             return callback(err);
 
@@ -84,7 +98,17 @@ exports.cryptPassword = function (password, callback) {
         });
     });
 };
-
+exports.tao_mat_khau = (password) =>{
+    return new Promise((resolve, reject)=>{
+        bcrypt.genSalt(10, function (err, salt) {
+            if (err)
+                reject(err);
+    
+            bcrypt.hash(password, salt, function (err, hash) {
+                resolve(hash);
+            });
+        });
+})} 
 exports.comparePassword = function (plainPass, hashword, callback) {
     bcrypt.compare(plainPass, hashword, function (err, isPasswordMatch) {
         return err == null ?
@@ -101,4 +125,33 @@ exports.test = (req, res) =>{
         <button>submit</button>
         </form>`
     );
+}
+exports.findOrCreate = async (profile, callback) => {
+    console.log(profile.emails[0].value);
+    await usersModel.findOne({email: profile.emails[0].value}, async (err, data)=>{
+        if(err)
+        return callback(err)
+        else {
+            if(data === null)// toa user moi
+            {
+                var mat_khau = await this.tao_mat_khau(Date.now() + 'asd').then((hash)=>{
+                    return hash;
+                });
+                var anh = await saveFile(profile.id, 'avatar', profile.photos[0].value);
+                var user = usersModel.create({
+                    ten_dang_nhap: profile.id,
+                    mat_khau,
+                    email: profile.emails[0].value,
+                    anh_dai_dien: anh,
+                    ten: profile.displayName,
+                    mang_xa_hoi: {facebook: [{id: profile.id}]}
+                })
+                return callback(null, user)
+            }
+            else {//tra user co trong database
+                return callback(null, data)
+            }
+        }
+    })
+    return (true);
 }

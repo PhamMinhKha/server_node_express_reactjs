@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 const bodyParser = require('body-parser');
 var passport = require('passport'),
-  Strategy = require('passport-local').Strategy;
+  Strategy = require('passport-local').Strategy,
+  FacebookStrategy = require('passport-facebook').Strategy;
 
 // create application/json parser
 var jsonParser = bodyParser.json();
@@ -23,7 +24,28 @@ const dbuser = require('./MVC/models/usersModel');
 // var book_instance_controller = require('../controllers/bookinstanceController');
 
 router.get('/', HotPage.HotPage);
-router.route('/login').get(Users.login)
+router.route('/login').get(Users.login);
+router.get('/auth/facebook', passport.authenticate('facebook', {
+  authType: 'rerequest',
+  scope: ['email'],
+  profile: ['photos', 'gender', 'profileUrl', 'displayName', 'username']
+}));
+router.get('/auth/facebook/callback',function(req, res, next){
+  passport.authenticate('facebook', function(err, user, info){
+      if(err){
+      return next(err);
+    }
+    req.logIn(user, function (err) {
+      if (err) {
+        return next(err);
+      } else {
+        req.session.token = info.token;
+        return res.redirect('/');
+      }
+    });
+  })(req, res, next);
+}
+ );
 // .post(passport.authenticate('local', {
 //   successRedirect: '/',
 //   failureRedirect: '/ok'
@@ -67,11 +89,11 @@ router.get('/ok', ensureAuthenticated, (req, res) => {
   res.send('ok')
 })
 // router.route('/login').get(Users.login).post(jsonParser, Users.xuLyLogin);
-router.route('/checklogin').post(jsonParser, Users.checkLogin);
+router.route('/checklogin').post(jsonParser, Users.checkLoginAxios);
 router.route('/New').get(New.Index).post(New.Index);
 router.route('/LuuAnh').post(jsonParser, New.luuAnh);
-// router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
-router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
+router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
+// router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
 
 passport.use('loginUsers', new Strategy(
   function (username, password, done) {
@@ -128,19 +150,36 @@ passport.deserializeUser(function (user, done) {
 function requireAdmin(req, res, next) {
   Users.checkLogin(req, res, (status, data) => {
     if (status) {
-      if (data.data.quyen_hang === 1){
-        debugger;
-        return next();}
-      else res.render('404', {
+      if (data.data.quyen_hang === 1) {
+        return next();
+      } else res.render('404', {
         url: req.url
       });
     } else res.render('404', {
       url: req.url
     });
   })
-
-
 }
-
+passport.use('facebook', new FacebookStrategy({
+    clientID: 259299504808580,
+    clientSecret: '906a0245d671ed5bd73b3f92757bd789',
+    callbackURL: "http://localhost:4000/auth/facebook/callback",
+    enableProof: true,
+    profileFields: ['id', 'email' ,'displayName' ,'photos', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified']
+  },
+  function (accessToken, refreshToken, profile, done) {
+    Users.findOrCreate(profile, function (err, user) {
+      if (err) {
+        return done(err);
+      }
+      else
+        return done(null, user, {
+              message: true,
+              ten_dang_nhap: user.ten_dang_nhap,
+              token: Users.token(user)
+        });
+    });
+  }
+));
 
 module.exports = router;

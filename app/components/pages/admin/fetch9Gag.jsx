@@ -30,6 +30,7 @@ class fetch9Gag extends Component {
         console.log(item);
         axios.post('/luuAnh', {
             'title': item.title,
+            'newTitle': item.newTitle,
             'img': item.img
         })
             .then((res) => {

@@ -59,7 +59,8 @@ module.exports = {
         // see webpack 1 upgrade guide
 
         options: {
-          presets: ["env", "react"]
+          presets: ["env", "react"],
+          plugins: ['transform-class-properties']
         },
       }
     ]

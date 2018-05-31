@@ -15,7 +15,24 @@ class LoginPage extends Component {
             message: ''
         }
     }
-
+    componentWillMount() {
+        axios.post('/checklogin')
+        .then(function (response) {
+          if(response.data !== false)
+          {
+            console.log('====================================');
+            console.log(this);
+            console.log('====================================');
+            this.props.Dang_Nhap(response.data.data.ten);
+          }
+        })
+        .catch(function (error) {
+          console.log('====================================');
+          console.log('asd');
+          console.log('====================================');
+          console.log(error);
+        });
+      }
     onChange(e) {
         let control = e.target.name;
         this.setState(...this.state, {
@@ -49,14 +66,6 @@ class LoginPage extends Component {
             })
 
         });
-        // axios.post('/login' , this.state,  {
-        //     headers: {'Content-Type': 'application/json;charset=UTF-8'},
-        // })
-        //     .then((res) => {
-        //         if (res.data === true) {
-        //             this.props.Dang_Nhap(this.state.txtUserName)
-        //         }
-        //     });
     }
     render() {
         return (
@@ -73,6 +82,7 @@ class LoginPage extends Component {
                             <input type="password" name="password" autoComplete="off" value={this.state.txtPassWord} className="form-control margin-top-bottom-5" onChange={this.onChange.bind(this)} />
                             <Button color="success" onClick={this.onSubmit.bind(this)}>Đăng Nhập</Button>
                             <Link className="pull-right" to="/register"> Đăng Ký Tài Khoản Mới </Link>
+                            <a className="pull-right" href="/auth/facebook"> Đăng Nhập Facebook </a>
                         </form>
                         <CardSubtitle className="margin-top-bottom-5">Bạn đăng nhập không thành công?</CardSubtitle>
                         <Link to="/forgotpassword">Bấm vào đây để lấy lại mật khẩu</Link>

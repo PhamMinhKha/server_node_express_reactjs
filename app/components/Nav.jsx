@@ -17,11 +17,28 @@ import axios from 'axios';
 class navBar extends Component {
     constructor(props) {
         super(props);
-    
         this.toggle = this.toggle.bind(this);
         this.state = {
           isOpen: false
         };
+      }
+      checkLogin = (test) =>{
+        console.log('ok')
+      }
+      componentWillMount =() => {
+        axios.post('/checklogin')
+        .then(function (response) {
+          if(response.data !== false)
+          {
+            console.log('====================================');
+            console.log(this.prop);
+            console.log('====================================');
+            this.props.Dang_Nhap(response.data.data.ten);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       }
       toggle() {
         this.setState({

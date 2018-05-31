@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 var Schema =  mongoose.Schema({
-            title : String,
+            title : JSON,
             img : String
         })
    
