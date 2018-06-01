@@ -9,12 +9,19 @@ class fetch9Gag extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            posts: null
+            posts: null,
+            trang: 1,
+            viTri: 0,
+            last_post_id: ''
         }
     }
 
     componentDidMount() {
-        axios.post('/New')
+        axios.post('/fetch9Gag',
+    {
+        trang: this.state.trang,
+        viTri: this.state.viTri
+    })
             .then((res) => {
                 this.setState({
                     posts: res
@@ -47,7 +54,7 @@ class fetch9Gag extends Component {
                 return (
                     <Card key={index} className="margin-top-bottom-5">
                         <h3 className="margin-top-bottom-5">{item.title}</h3>
-                        <CardImg top width="100%" src={item.img} alt={item.title} />
+                        <CardImg top width="100%" src={item.images.image460.url} alt={item.title} />
                         <CardBody>
                             <input type="text"  onChange={(e)=>{item.newTitle = e.target.value}} />
                             <CardSubtitle>Card subtitle</CardSubtitle>

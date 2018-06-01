@@ -15,24 +15,6 @@ class LoginPage extends Component {
             message: ''
         }
     }
-    componentWillMount() {
-        axios.post('/checklogin')
-        .then(function (response) {
-          if(response.data !== false)
-          {
-            console.log('====================================');
-            console.log(this);
-            console.log('====================================');
-            this.props.Dang_Nhap(response.data.data.ten);
-          }
-        })
-        .catch(function (error) {
-          console.log('====================================');
-          console.log('asd');
-          console.log('====================================');
-          console.log(error);
-        });
-      }
     onChange(e) {
         let control = e.target.name;
         this.setState(...this.state, {
@@ -56,9 +38,10 @@ class LoginPage extends Component {
         // config: { headers: {'Content-Type': 'application/x-www-form-urlencoded' }}
         };
         axios(options).then((data)=>{
-            var {message, ten_dang_nhap} = data.data.detail;
+            var {message, username, quyen_hang} = data.data.detail;
             if(message === true){
-                this.props.Dang_Nhap(ten_dang_nhap);
+                let user = {username, permission: quyen_hang};
+                this.props.Dang_Nhap(user);
                 this.props.history.push('/');
             }
             else this.setState({
@@ -103,7 +86,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    Dang_Nhap: (user) => dispatch({ type: 'DANG_NHAP', username: user }),
+    Dang_Nhap: (user) => dispatch({ type: 'DANG_NHAP', user: user }),
     Dang_xuat: () => dispatch({ type: 'DANG_XUAT', username: 'ok da dang xuat' })
 })
 export default withRouter(connect(mapDispatchToProps, mapDispatchToProps)(LoginPage));

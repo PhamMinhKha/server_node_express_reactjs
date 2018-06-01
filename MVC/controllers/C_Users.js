@@ -126,6 +126,10 @@ exports.test = (req, res) =>{
         </form>`
     );
 }
+exports.logOut = (req, res) =>{
+    req.session.destroy();
+    res.redirect('/');
+}
 exports.findOrCreate = async (profile, callback) => {
     console.log(profile.emails[0].value);
     await usersModel.findOne({email: profile.emails[0].value}, async (err, data)=>{

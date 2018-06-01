@@ -1,8 +1,11 @@
-const Login = (state = null, action) => {
+const init = {
+    username: '',
+    permission: null,
+}
+const Login = (state = init, action) => {
     switch(action.type){
         case 'DANG_NHAP':
-            console.log(action);
-            return action.username;
+            return action.user;
         default:
             return state;
     }

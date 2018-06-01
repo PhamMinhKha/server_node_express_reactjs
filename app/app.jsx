@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { createStore } from 'redux';
-
+import thunk from 'redux-thunk';
 import 'bootstrap';
 
 import {Provider} from 'react-redux';

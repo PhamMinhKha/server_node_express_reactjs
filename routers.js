@@ -92,7 +92,13 @@ router.get('/ok', ensureAuthenticated, (req, res) => {
 router.route('/checklogin').post(jsonParser, Users.checkLoginAxios);
 router.route('/New').get(New.Index).post(New.Index);
 router.route('/LuuAnh').post(jsonParser, New.luuAnh);
-router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
+// router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
+router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
+router.route('/logout').get((req, res, next)=>{
+  req.logout();
+  next();
+}, Users.logOut);
+// router.route('./fetch9Gag').post(jsonParser, fetch9Gag.fetchPosts);
 // router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.HotPageLogin);
 
 passport.use('loginUsers', new Strategy(
@@ -116,7 +122,8 @@ passport.use('loginUsers', new Strategy(
           if (data)
             return done(null, user, {
               message: true,
-              ten_dang_nhap: user.ten_dang_nhap,
+              username: user.ten,
+              quyen_hang: user.quyen_hang,
               token: Users.token(user)
             });
           else
@@ -175,7 +182,8 @@ passport.use('facebook', new FacebookStrategy({
       else
         return done(null, user, {
               message: true,
-              ten_dang_nhap: user.ten_dang_nhap,
+              username: user.ten_dang_nhap,
+              permission: user.quyen_hang,
               token: Users.token(user)
         });
     });

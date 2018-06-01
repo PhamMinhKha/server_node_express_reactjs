@@ -13,6 +13,7 @@ import { Collapse,
     DropdownMenu,
     DropdownItem, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { connect } from 'react-redux';
+import MenuAdmin from './pages/admin/MenuAdmin.jsx';
 import axios from 'axios';
 class navBar extends Component {
     constructor(props) {
@@ -22,18 +23,15 @@ class navBar extends Component {
           isOpen: false
         };
       }
-      checkLogin = (test) =>{
-        console.log('ok')
-      }
-      componentWillMount =() => {
+      componentDidMount = () => {
+        const props = this.props;
         axios.post('/checklogin')
         .then(function (response) {
           if(response.data !== false)
           {
-            console.log('====================================');
-            console.log(this.prop);
-            console.log('====================================');
-            this.props.Dang_Nhap(response.data.data.ten);
+            console.log(response.data.data.ten);
+            let user = {username: response.data.data.ten, permission: response.data.data.quyen_hang};
+            props.Dang_Nhap(user);
           }
         })
         .catch(function (error) {
@@ -46,7 +44,11 @@ class navBar extends Component {
         });
       }
     render() {
-        let isLogin = this.props.items.Login;
+        // let isLogin = this.props.items.Login;
+        let isLogin = (this.props.items.Login.username !== "") ?  this.props.items.Login.username : null  ;
+        let menuAdmin = [{link: '/fetch9Gag', name: '9Gag'},{link: '/fetchHaivn', name: 'HaiVN'}];
+        // let quyen_hang = (isLogin && this.props.items.Login.quyen_hang) ? this.props.items.Login.quyen_hang : 0;
+        // let isLogin = null;
         return (
             <div>
             <Navbar color="dark" dark expand="md">
@@ -63,6 +65,11 @@ class navBar extends Component {
                   <NavItem>
                     <NavLink href="https://github.com/reactstrap/reactstrap">Mới</NavLink>
                   </NavItem>
+                   {(isLogin && this.props.items.Login.permission === 1) ? 
+                   menuAdmin.map((item, index) =>{
+                    return <MenuAdmin key={index} link={item.link}>{item.name}</MenuAdmin>
+                   })
+                    : ''}
                 </Nav>
               </Collapse>
               <Collapse isOpen={this.state.isOpen} navbar>
@@ -76,6 +83,7 @@ class navBar extends Component {
                   <NavItem>
                     {(!isLogin) ? (<Link className ="nav-link" to="/login">Login</Link>): (<Link className ="nav-link" to="/profile">{isLogin}</Link>)}
                   </NavItem>
+                  {(isLogin) ? 
                   <UncontrolledDropdown nav inNavbar>
                     <DropdownToggle nav caret>
                       Options
@@ -89,10 +97,11 @@ class navBar extends Component {
                       </DropdownItem>
                       <DropdownItem divider />
                       <DropdownItem>
-                        Reset
+                        <NavLink href="/logout" style={{color:"gray"}}>Thoát</NavLink>
                       </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>
+    : ''}
                 </Nav>
               </Collapse>
             </Navbar>
@@ -100,10 +109,12 @@ class navBar extends Component {
         )
     }
 }
-const mapStateToProps = state =>{
+const mapStateToProps = (state) =>{
     return {items : state }
+    // return {items : null}
 }
 const mapDispatchToProps = dispatch => ({
-    Dang_Nhap: (user) => dispatch({type:'DANG_NHAP', username:user}),
+    Dang_Nhap: (user) => dispatch({type:'DANG_NHAP', user:user}),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(navBar);
+// export default navBar;
