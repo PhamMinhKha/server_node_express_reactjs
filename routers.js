@@ -16,6 +16,7 @@ var urlencodedParser = bodyParser.urlencoded({
 const HotPage = require('./MVC/controllers/C_HotPage');
 const Users = require('./MVC/controllers/C_Users');
 const New = require('./MVC/controllers/C_NewPage');
+const C_Category = require('./MVC/controllers/C_Category');
 const fetch9Gag = require('./MVC/controllers/C_fetch9Gag');
 const dbuser = require('./MVC/models/usersModel');
 // var book_controller = require('../controllers/bookController');
@@ -24,6 +25,7 @@ const dbuser = require('./MVC/models/usersModel');
 // var book_instance_controller = require('../controllers/bookinstanceController');
 
 router.get('/', HotPage.HotPage);
+router.get('/loadCategories', C_Category.loadCategory);
 router.route('/login').get(Users.login);
 router.get('/auth/facebook', passport.authenticate('facebook', {
   authType: 'rerequest',
@@ -94,6 +96,7 @@ router.route('/New').get(New.Index).post(New.Index);
 router.route('/LuuAnh').post(jsonParser, New.luuAnh);
 // router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
 router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
+router.route('/fetch9Gag/loadMore/:id').get(fetch9Gag.loadMore);
 router.route('/logout').get((req, res, next)=>{
   req.logout();
   next();

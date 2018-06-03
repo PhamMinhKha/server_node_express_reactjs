@@ -24,6 +24,7 @@ import ProfilePage from './components/pages/ProfilePage.jsx';
 import fetch9Gag from './components/pages/admin/fetch9Gag.jsx';
 import './css/custom.css';
 
+
 ReactDOM.render(
   <Provider store={store} >
     <Router>

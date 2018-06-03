@@ -37,6 +37,16 @@ class navBar extends Component {
         .catch(function (error) {
           console.log(error);
         });
+        axios.get('/loadCategories')
+        .then(function (response) {
+          if(response !== false)
+          {
+            props.DanhSachLoai(response.data);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       }
       toggle() {
         this.setState({
@@ -115,6 +125,7 @@ const mapStateToProps = (state) =>{
 }
 const mapDispatchToProps = dispatch => ({
     Dang_Nhap: (user) => dispatch({type:'DANG_NHAP', user:user}),
+    DanhSachLoai: (categories) => dispatch({type: 'DANH_SACH_LOAI', categories})
 })
 export default connect(mapStateToProps, mapDispatchToProps)(navBar);
 // export default navBar;
