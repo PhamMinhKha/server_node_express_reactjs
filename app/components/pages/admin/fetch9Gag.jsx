@@ -7,6 +7,7 @@ import {
 } from 'reactstrap';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {connect} from 'react-redux';
+import ReactHtmlParser from 'react-html-parser';
 
 class fetch9Gag extends Component {
     constructor(props) {
@@ -23,8 +24,6 @@ class fetch9Gag extends Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount')
-
         axios.post('/fetch9Gag',
             {
                 trang: this.state.trang,
@@ -75,21 +74,27 @@ class fetch9Gag extends Component {
         e.preventDefault(); // Let's stop this event.
         e.stopPropagation(); // Really this time.
         // const name = ReactDOM.findDOMNode(this.refs.aoNLg5e_5b1373348ef25b0bfa05ab43)
-        
-        var categories = this.props.state.Categories;
-        var mang_category = [];
-        categories.forEach(element => {
-            const name = document.getElementById(item.id + '_'+ element._id).checked;
-            if(name)
+        console.log(item)
+        var video = null;
+        if(item.categories.indexOf("5b1373438ef25b0bfa05ab50") !== -1)
             {
-                mang_category.push(element._id)
+                video =  {
+                    url: item.images.image460sv.h265Url,
+                    duration: item.images.image460sv.duration,
+                    hasAudio: item.images.image460sv.hasAudio,
+                    height: item.images.image460sv.height,
+                    width: item.images.image460sv.width
+                }
             }
-        });
-        console.log(mang_category);
+        console.log(video);
         axios.post('/luuAnh', {
-            'title': item.title,
+            'title': item.title[0],
             'newTitle': item.newTitle,
-            'img': item.img
+            'categories': item.categories,
+            'image': {url: item.images.image460.webpUrl,
+                        height: item.images.image460.height,
+                        width: item.images.image460.width},
+            'video': video
         })
             .then((res) => {
 
@@ -100,14 +105,14 @@ class fetch9Gag extends Component {
         var data = this.state.posts;
         var Html = null;
         var categories = this.props.state.Categories;
-        console.log(categories);
         const loader = <div className="loader">Loading ...</div>;
         if (data !== null) {
             Html = data.map((item, index) => {
                 if(categories !== null){
                     var MangCategories = categories.map((i, stt) => {
+                        item["categories"] = [];
                         return (
-                            <span key={stt}><Input  ref={item.id + '_' + i._id} id={item.id + '_' + i._id}  addon type="checkbox" aria-label="Checkbox for following text input" />{i.categoryName}</span>
+                            <span key={stt}><Input  ref={item.id + '_' + i._id} id={item.id + '_' + i._id} onChange={(e) => {item["categories"].push(i._id); console.log(item)}}  addon type="checkbox" aria-label="Checkbox for following text input" />{i.categoryName}</span>
                         )
                     })}
                 if (item.type === "Animated") {
@@ -121,12 +126,12 @@ class fetch9Gag extends Component {
                     var img = (<CardImg top width="100%" src={item.images.image460.url} alt={item.title} />)
                 }
                 return (
-                    <form onSubmit={(e) => { this.luuAnh(item, e) }}>
-                    <Card key={item.id + index} className="margin-top-bottom-5">
-                        <h3 className="margin-top-bottom-5">{item.title}</h3>
+                    <form key={item.id + index} onSubmit={(e) => { this.luuAnh(item, e) }}>
+                    <Card className="margin-top-bottom-5">
+                        <h3 className="margin-top-bottom-5">{ ReactHtmlParser(item.title) }</h3>
                         {img}
                         <CardBody>
-                            <input type="text" onChange={(e) => { item.newTitle = e.target.value }} />
+                            <input type="text" onChange={(e) => {item.title = ReactHtmlParser(item.title); item.newTitle = e.target.value }} />
                             <CardSubtitle>Test</CardSubtitle>
                                 {MangCategories}
                             <Button >Button</Button>
@@ -145,7 +150,8 @@ class fetch9Gag extends Component {
                             pageStart={0}
                             next={this.loadMore.bind(this)}
                             hasMore={true}
-                            loader={<h4>Loading...</h4>}
+                            loader={<h4 onClick={this.loadMore.bind(this)}>Loading...</h4>}
+                            scrollThreshold={0.5}
                             endMessage={
                                 <p style={{ textAlign: 'center' }}>
                                     <b>Yay! You have seen it all</b>

@@ -19,6 +19,7 @@ const New = require('./MVC/controllers/C_NewPage');
 const C_Category = require('./MVC/controllers/C_Category');
 const fetch9Gag = require('./MVC/controllers/C_fetch9Gag');
 const dbuser = require('./MVC/models/usersModel');
+const C_Posts = require('./MVC/controllers/C_Posts');
 // var book_controller = require('../controllers/bookController');
 // var author_controller = require('../controllers/authorController');
 // var genre_controller = require('../controllers/genreController');
@@ -93,7 +94,7 @@ router.get('/ok', ensureAuthenticated, (req, res) => {
 // router.route('/login').get(Users.login).post(jsonParser, Users.xuLyLogin);
 router.route('/checklogin').post(jsonParser, Users.checkLoginAxios);
 router.route('/New').get(New.Index).post(New.Index);
-router.route('/LuuAnh').post(jsonParser, New.luuAnh);
+router.route('/LuuAnh').post(jsonParser, C_Posts.luuAnh);
 // router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
 router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
 router.route('/fetch9Gag/loadMore/:id').get(fetch9Gag.loadMore);
