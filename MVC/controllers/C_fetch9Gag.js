@@ -7,6 +7,10 @@ exports.Index = function(req, res) {
 exports.loadMore = function(req, res){
     request('https://9gag.com/v1/group-posts/group/default/type/hot?after='+req.params.id+'&c=10', function (error, response, body) {
         var data = JSON.parse(body);
+        if(typeof(data) !== "object")
+        {
+            res.json({error: "Không lấy được ảnh từ 9Gag"})
+        }else
         res.json(data);
     });
 }

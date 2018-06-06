@@ -10,8 +10,10 @@ var Schema =  mongoose.Schema({
             categorys: JSON,
             dateCreate: { type: Date, default: Date.now },
             dateModify: { type: Date, default: Date.now },
-            user_ObjectId: { type: Number },
-            status: { type: Number, default: 'New'} // Hot, Trend, New
+            user_ObjectId: { type: mongoose.Schema.Types.ObjectId, default: "5b0fba657ae4f53f8cf82a91" },
+            upVote: {type: Number, default: 0},
+            downVote: {type: Number, default: 0},
+            status: { type: String, default: 'New'} // Hot, Trend, New
         })
    
 module.exports = mongoose.model('posts', Schema);

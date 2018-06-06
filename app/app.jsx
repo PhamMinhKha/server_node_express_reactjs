@@ -22,6 +22,7 @@ import LoginPage from './components/pages/LoginPage.jsx';
 import ProfilePage from './components/pages/ProfilePage.jsx';
 //admin page
 import fetch9Gag from './components/pages/admin/fetch9Gag.jsx';
+import fetchHaiVN from './components/pages/admin/fetchHaiVN.jsx';
 import './css/custom.css';
 
 
@@ -34,6 +35,7 @@ ReactDOM.render(
       <Route path="/login" component={LoginPage} />
       <Route path="/new" component={NewPage} />
       <Route path="/fetch9Gag" component={fetch9Gag} />
+      <Route path="/fetchHaiVN" component={fetchHaiVN} />
       <Route path="/profile" component={ProfilePage} />
     </div>
   </Router>

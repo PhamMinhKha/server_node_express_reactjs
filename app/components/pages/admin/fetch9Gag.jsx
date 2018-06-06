@@ -9,6 +9,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import {connect} from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
 
+import {handleScroll} from './../script/viewport';
+
 class fetch9Gag extends Component {
     constructor(props) {
         super(props);
@@ -21,9 +23,13 @@ class fetch9Gag extends Component {
             nextHref: null,
             categories: null,
         }
+        // this.isOnScreen = this.isOnScreen.bind(this);
     }
-
+    componentWillUnmount() {
+        window.removeEventListener('scroll', handleScroll);
+    }
     componentDidMount() {
+        window.addEventListener('scroll', handleScroll);
         axios.post('/fetch9Gag',
             {
                 trang: this.state.trang,
@@ -60,6 +66,7 @@ class fetch9Gag extends Component {
                 {
                     method: 'get',
                     url: '/fetch9Gag/loadMore/' + this.state.last_post_id,
+                    timeout: 10000,
                 })
                 .then((res) => {
                     let old_posts = this.state.posts;
@@ -73,9 +80,13 @@ class fetch9Gag extends Component {
     luuAnh(item, e) {
         e.preventDefault(); // Let's stop this event.
         e.stopPropagation(); // Really this time.
-        // const name = ReactDOM.findDOMNode(this.refs.aoNLg5e_5b1373348ef25b0bfa05ab43)
-        console.log(item)
         var video = null;
+        var nsfw = 0;
+        item.title = ReactHtmlParser(item.title);
+        if(item.categories.indexOf("5b13e8318ef25b0bfa05c104") !== -1)
+        {
+            nsfw = 1;
+        }
         if(item.categories.indexOf("5b1373438ef25b0bfa05ab50") !== -1)
             {
                 video =  {
@@ -86,18 +97,26 @@ class fetch9Gag extends Component {
                     width: item.images.image460sv.width
                 }
             }
-        console.log(video);
         axios.post('/luuAnh', {
+            'id': item.id,
+            'sourceUrl': 'https://9gag.com/gag/'+item.id,
             'title': item.title[0],
             'newTitle': item.newTitle,
             'categories': item.categories,
             'image': {url: item.images.image460.webpUrl,
                         height: item.images.image460.height,
                         width: item.images.image460.width},
-            'video': video
+            'video': video,
+            'nsfw': nsfw,
+            'upVote': 1000,
+            'status': 'Hot'
         })
             .then((res) => {
-
+                if(res.data.error)
+                {
+                    alert(res.data.error)
+                }else
+                console.log(res)
             });
 
     }
@@ -111,32 +130,42 @@ class fetch9Gag extends Component {
                 if(categories !== null){
                     var MangCategories = categories.map((i, stt) => {
                         item["categories"] = [];
+                        var videoCheck = '';
+                        if(item.type === "Animated" && i._id == "5b1373438ef25b0bfa05ab50")
+                        {
+                            videoCheck = "true";
+                        }
+                        else videoCheck = "false";
                         return (
-                            <span key={stt}><Input  ref={item.id + '_' + i._id} id={item.id + '_' + i._id} onChange={(e) => {item["categories"].push(i._id); console.log(item)}}  addon type="checkbox" aria-label="Checkbox for following text input" />{i.categoryName}</span>
+                            <label key={stt} className="btn btn-primary margin-left-right-5"><Input  ref={item.id + '_' + i._id} id={item.id + '_' + i._id} onChange={(e) => {item["categories"].push(i._id); console.log(item)}}  addon type="checkbox" aria-label="Checkbox for following text input"/>{i.categoryName}</label>
                         )
                     })}
                 if (item.type === "Animated") {
                     var img = (
-                        <video width="320" height="240" controls>
+                               (
+                               <video onPause={e => console.log(e)} id={'video_'+ item.id} ref={this.listRef} loop className="post-content video center"  preload="none"  poster={item.images.image460.url}  controls>
                             <source src={item.images.image460sv.url} type="video/mp4" />
                             Your browser does not support the video tag.
-                    </video>
+                            
+                        </video>)
                     )
                 } else {
-                    var img = (<CardImg top width="100%" src={item.images.image460.url} alt={item.title} />)
+                    var img = (<CardImg className="post-content center" top width="100%" src={item.images.image460.url} alt={item.title} />)
                 }
                 return (
                     <form key={item.id + index} onSubmit={(e) => { this.luuAnh(item, e) }}>
+                  
                     <Card className="margin-top-bottom-5">
                         <h3 className="margin-top-bottom-5">{ ReactHtmlParser(item.title) }</h3>
                         {img}
                         <CardBody>
-                            <input type="text" onChange={(e) => {item.title = ReactHtmlParser(item.title); item.newTitle = e.target.value }} />
-                            <CardSubtitle>Test</CardSubtitle>
+                            <h4>Nhập tựa đề mới</h4>
+                            <input type="text" className="form-control margin-top-bottom-5" onChange={(e) => { item.newTitle = e.target.value }} />
                                 {MangCategories}
-                            <Button >Button</Button>
+                            <Button className="margin-top-bottom-5">Đăng Lên Trang Chủ</Button>
                         </CardBody>
                     </Card>
+                    
                     </form>
                 )
             })
@@ -150,8 +179,8 @@ class fetch9Gag extends Component {
                             pageStart={0}
                             next={this.loadMore.bind(this)}
                             hasMore={true}
-                            loader={<h4 onClick={this.loadMore.bind(this)}>Loading...</h4>}
-                            scrollThreshold={0.5}
+                            loader={<div className="fullWidth margin-top-bottom-5"><div className="loader center" onClick={this.loadMore.bind(this)}></div></div>}
+                            scrollThreshold={0.9}
                             endMessage={
                                 <p style={{ textAlign: 'center' }}>
                                     <b>Yay! You have seen it all</b>

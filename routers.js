@@ -18,6 +18,7 @@ const Users = require('./MVC/controllers/C_Users');
 const New = require('./MVC/controllers/C_NewPage');
 const C_Category = require('./MVC/controllers/C_Category');
 const fetch9Gag = require('./MVC/controllers/C_fetch9Gag');
+const fetchHaiVN = require('./MVC/controllers/C_fetchHaiVN');
 const dbuser = require('./MVC/models/usersModel');
 const C_Posts = require('./MVC/controllers/C_Posts');
 // var book_controller = require('../controllers/bookController');
@@ -98,6 +99,8 @@ router.route('/LuuAnh').post(jsonParser, C_Posts.luuAnh);
 // router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
 router.route('/fetch9Gag').get(fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
 router.route('/fetch9Gag/loadMore/:id').get(fetch9Gag.loadMore);
+router.route('/fetchHaiVN').get(fetchHaiVN.Index).post(jsonParser, fetchHaiVN.fetchPosts);
+router.route('/fetchHaiVN/loadMore/:id').get(fetchHaiVN.loadMore);
 router.route('/logout').get((req, res, next)=>{
   req.logout();
   next();
