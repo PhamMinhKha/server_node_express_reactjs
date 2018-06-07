@@ -100,6 +100,7 @@ class fetch9Gag extends Component {
         axios.post('/luuAnh', {
             'id': item.id,
             'sourceUrl': 'https://9gag.com/gag/'+item.id,
+            'folder': '9Gag',
             'title': item.title[0],
             'newTitle': item.newTitle,
             'categories': item.categories,
@@ -108,6 +109,7 @@ class fetch9Gag extends Component {
                         width: item.images.image460.width},
             'video': video,
             'nsfw': nsfw,
+            'sourceDomain': '9Gag',
             'upVote': 1000,
             'status': 'Hot'
         })

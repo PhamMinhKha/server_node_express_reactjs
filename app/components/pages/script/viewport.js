@@ -4,33 +4,34 @@ exports.handleScroll = (event) => {
     $(".video").each(function (index) {
         var video = $(this).get(0);
         var test = isOnScreen($(this));
-        
-            if (test) {
-                try {
-                    var isPlaying = video.currentTime > 0 && !video.paused && !video.ended 
-                    && video.readyState > 2;
+        if (test) {
+            try {
+                // console.log(video.readyState );
+                var isPlaying = !(video.currentTime > 0) && !video.ended &&
+                    video.readyState >= 2;
 
-                if (!isPlaying) {
-                video.play();
+                if (isPlaying) {
+                    video.play();
                 }
                 // $(this).get(0).play();
             } catch (err) {
-                console.log(err)
+                console.log('error play')
             }
-            } else {
-                try{
-                    var isPlaying = video.currentTime > 0 && !video.paused && !video.ended 
-                    && video.readyState > 2;
+        } else {
+            try {
+                // console.log($(this).attr('id') + video.currentTime);
+                var isPlaying = video.currentTime > 0 && !video.paused && !video.ended &&
+                    video.readyState > 2;
 
                 if (isPlaying) {
-                video.pause();
+                    video.pause();
                 }
                 // $(this).get(0).pause();
-            }catch(err){
+            } catch (err) {
                 console.log('error pause');
             }
-            }
-        
+        }
+
     });
 }
 

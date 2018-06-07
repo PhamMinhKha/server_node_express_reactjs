@@ -62,7 +62,7 @@ class navBar extends Component {
         return (
             <div>
             <Navbar color="dark" dark expand="md">
-              <NavbarBrand href="/">TéGhé.Fun</NavbarBrand>
+              <NavbarBrand href="/">Hai VL</NavbarBrand>
               <NavbarToggler onClick={this.toggle} />
               <Collapse isOpen={this.state.isOpen} navbar>
                 <Nav className="" navbar>

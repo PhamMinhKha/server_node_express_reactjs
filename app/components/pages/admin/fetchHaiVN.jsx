@@ -80,30 +80,23 @@ class fetchHaiVN extends Component {
         var video = null;
         var nsfw = 0;
         item.title = ReactHtmlParser(item.title);
+        console.log(item.title);
         if(item.categories.indexOf("5b13e8318ef25b0bfa05c104") !== -1)
         {
             nsfw = 1;
         }
-        if(item.categories.indexOf("5b1373438ef25b0bfa05ab50") !== -1)
-            {
-                video =  {
-                    url: item.images.image460sv.h265Url,
-                    duration: item.images.image460sv.duration,
-                    hasAudio: item.images.image460sv.hasAudio,
-                    height: item.images.image460sv.height,
-                    width: item.images.image460sv.width
-                }
-            }
         axios.post('/luuAnh', {
             'id': item.id,
-            'sourceUrl': 'https://9gag.com/gag/'+item.id,
+            'sourceUrl': item.sourceUrl,
             'title': item.title[0],
             'newTitle': item.newTitle,
+            'folder': 'HaiVN',
             'categories': item.categories,
-            'image': {url: item.images.image460.webpUrl,
-                        height: item.images.image460.height,
-                        width: item.images.image460.width},
-            'video': video,
+            'image': {url: 'http:'+item.src,
+                        height: 0,
+                        width: 0},
+            'video': null,
+            'sourceDomain': 'HaiVN',
             'nsfw': nsfw,
             'upVote': 1000,
             'status': 'Hot'
@@ -119,7 +112,6 @@ class fetchHaiVN extends Component {
     }
     render() {
         var data = this.state.posts;
-        console.log(data);
         var Html = null;
         var categories = this.props.state.Categories;
         const loader = <div className="loader">Loading ...</div>;

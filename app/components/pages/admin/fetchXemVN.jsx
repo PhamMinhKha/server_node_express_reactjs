@@ -1,0 +1,182 @@
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import axios from 'axios';
+import {
+    Container, Row, Col, Card, CardImg, CardText, CardBody,
+    CardTitle, CardSubtitle, Button, Input, Form
+} from 'reactstrap';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import {connect} from 'react-redux';
+import ReactHtmlParser from 'react-html-parser';
+
+import {handleScroll} from './../script/viewport';
+
+class fetchXemVN extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            posts: [],
+            trang: 1,
+            viTri: 0,
+            last_post_id: '',
+            hasMoreItems: true,
+            nextHref: null,
+            categories: null,
+        }
+        // this.isOnScreen = this.isOnScreen.bind(this);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('scroll', handleScroll);
+    }
+    componentDidMount() {
+        window.addEventListener('scroll', handleScroll);
+        axios.post('/fetchXemVN',
+            {
+                trang: this.state.trang,
+                viTri: this.state.viTri
+            })
+            .then((res) => {
+                this.setState({
+                     posts: res.data.posts,
+                     trang: res.data.trang,
+                });
+            });
+
+    }
+    loadMore(e) {
+        console.log(e)
+        axios.defaults.headers.get['Content-Type'] = 'application/json; charset=utf-8';
+        if (e === 1)
+            axios.post('/fetchXemVN',
+                {
+                    trang: this.state.trang,
+                    viTri: this.state.viTri
+                })
+                .then((res) => {
+                    this.setState({
+                        posts: res.data.posts,
+                        trang: res.data.trang,
+                   });
+                });
+        else
+            axios(
+                {
+                    method: 'get',
+                    url: '/fetchXemVN/loadMore/' + this.state.trang,
+                    timeout: 10000,
+                })
+                .then((res) => {
+                    let old_posts = this.state.posts;
+                    let new_posts = old_posts.concat(res.data.posts);
+                    this.setState({
+                        posts: new_posts,
+                        trang: res.data.trang,
+                   });
+                });
+    }
+    luuAnh(item, e) {
+        e.preventDefault(); // Let's stop this event.
+        e.stopPropagation(); // Really this time.
+        var video = null;
+        var nsfw = 0;
+        item.title = ReactHtmlParser(item.title);
+        console.log(item.title);
+        if(item.categories.indexOf("5b13e8318ef25b0bfa05c104") !== -1)
+        {
+            nsfw = 1;
+        }
+        axios.post('/luuAnh', {
+            'id': item.id,
+            'sourceUrl': item.sourceUrl,
+            'title': item.title[0],
+            'newTitle': item.newTitle,
+            'folder': 'XemVN',
+            'categories': item.categories,
+            'image': {url: item.src,
+                        height: 0,
+                        width: 0},
+            'video': null,
+            'sourceDomain': 'XemVN',
+            'nsfw': nsfw,
+            'upVote': 1000,
+            'status': 'Hot'
+        })
+            .then((res) => {
+                if(res.data.error)
+                {
+                    alert(res.data.error)
+                }else
+                console.log(res)
+            });
+
+    }
+    render() {
+        var data = this.state.posts;
+        var Html = null;
+        var categories = this.props.state.Categories;
+        const loader = <div className="loader">Loading ...</div>;
+        if (data !== null) {
+            Html = data.map((item, index) => {
+                if(item){
+                if(categories !== null){
+                    var MangCategories = categories.map((i, stt) => {
+                        item["categories"] = [];
+                       
+                        return (
+                            <label key={stt} className="btn btn-primary margin-left-right-5"><Input  ref={item.id + '_' + i._id} id={item.id + '_' + i._id} onChange={(e) => {item["categories"].push(i._id); console.log(item)}}  addon type="checkbox" aria-label="Checkbox for following text input"/>{i.categoryName}</label>
+                        )
+                    })}
+               
+                    var img = (<CardImg className="post-content center" top width="100%" src={item.src} alt={item.title} />)
+                return (
+                    <form key={item.id + index} onSubmit={(e) => { this.luuAnh(item, e) }}>
+                  
+                    <Card className="margin-top-bottom-5">
+                        <h3 className="margin-top-bottom-5">{ ReactHtmlParser(item.title) }</h3>
+                        {img}
+                        <CardBody>
+                            <h4>Nhập tựa đề mới</h4>
+                            <input type="text" className="form-control margin-top-bottom-5" onChange={(e) => { item.newTitle = e.target.value }} />
+                                {MangCategories}
+                            <Button className="margin-top-bottom-5">Đăng Lên Trang Chủ</Button>
+                        </CardBody>
+                    </Card>
+                    
+                    </form>
+                )
+            }})
+        }
+        return (
+            <Container>
+                <Row>
+                    <Col xs="12" sm="8" lg="8">
+                        <InfiniteScroll
+                            dataLength={this.state.posts.length} //This is important field to render the next data
+                            pageStart={0}
+                            next={this.loadMore.bind(this)}
+                            hasMore={true}
+                            loader={<div className="fullWidth margin-top-bottom-5"><div className="loader center" onClick={this.loadMore.bind(this)}></div></div>}
+                            scrollThreshold={0.9}
+                            endMessage={
+                                <p style={{ textAlign: 'center' }}>
+                                    <b>Yay! You have seen it all</b>
+                                </p>
+                            }>
+                            {Html}
+                        </InfiniteScroll>
+                    </Col>
+                    <Col xs="12" sm="4" lg="4">
+                        {/* {BatTu} */}
+                    </Col>
+                </Row>
+            </Container>
+        )
+    }
+}
+const mapStateToProps = state => {
+    return {
+        'state' : state
+    }
+}
+
+export default connect(mapStateToProps, null)(fetchXemVN);

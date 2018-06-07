@@ -1,53 +1,92 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-
+import { StickyContainer, Sticky } from 'react-sticky';
+import Post from './includes/Post.jsx';
+import {handleScroll} from './script/viewport';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import {Button} from 'reactstrap';
 class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            password: ''
+            trang: 1,
+            posts: [],
+            hasMore: true
         }
     }
-  
-    onChange(e) {
-        let control = e.target.name;
-        this.setState(...this.state,{
-            [control] : e.target.value
-        })
-        console.log(this.state);
-    }
-    onSubmit(e){
-        // e.preventDefault();
-        axios.post('/HomePage', this.state)
-        .then((res) => {
-            if(res.data === true){
-                this.props.Dang_Nhap(this.state.txtUserName)
+    componentDidMount() {
+        window.addEventListener('scroll', handleScroll);
+        axios.get('/loadMore/'+this.state.trang)
+            .then((res) => {
+                if(res.error){
+                    alert('Không lấy được giữ liệu vu lòng bấm F5!');
+                }
+                else {
+                this.setState({
+                     posts: res.data.posts,
+                     trang: res.data.trang,
+                });
             }
-        });
+            });
+
+    }
+    loadMore(e) {
+        axios(
+            {
+                method: 'get',
+                url: '/loadMore/' + this.state.trang,
+                timeout: 10000,
+            })
+            .then((res) => {
+                let old_posts = this.state.posts;
+                let new_posts = old_posts.concat(res.data.posts);
+                if(res.data.posts.length === 0 ){
+                    this.setState({hasMore: false})
+                }
+                else {
+                this.setState({
+                    posts: new_posts,
+                    trang: res.data.trang,
+                });
+            }
+            }).catch((err) =>{
+                console.log(err);
+                if(err.code == 'ECONNABORTED')
+                {
+                    document.getElementById("loadMore").innerHTML('<Button className="btn btn-primary margin-left-right-5">Click Để Xem Thêm</Button>')
+                }
+            })
+                ;
     }
     render() {
         return (
-            <div>
-                <h1>this is homepage</h1>
-                <form method="post" action="/HomePage">
-                {/* <input type="text" name="txtUserName" autoComplete="off" value={this.state.txtUserName} className="form-control" onChange={this.onChange.bind(this)} />
-                <input type="text" name="txtPassWord" autoComplete="off" value={this.state.txtPassWord} className="form-control" onChange={this.onChange.bind(this)} /> */}
-                <input type="text" name="username" autoComplete="off" value={this.state.txtUserName} className="form-control" onChange={this.onChange.bind(this)} />
-                <input type="text" name="password" autoComplete="off" value={this.state.txtPassWord} className="form-control" onChange={this.onChange.bind(this)} />
-                <input type="submit" value="Đăng nhập" onClick={this.onSubmit.bind(this)}/>
-                </form>
+            <div className="main-content">
+                
+                <InfiniteScroll
+                            dataLength={this.state.posts.length} //This is important field to render the next data
+                            pageStart={0}
+                            next={this.loadMore.bind(this)}
+                            hasMore={this.state.hasMore}
+                            loader={<div className="fullWidth margin-top-bottom-5"><div className="loader center" id="loadMore" onClick={this.loadMore.bind(this)}></div></div>}
+                            scrollThreshold={0.9}
+                            endMessage={
+                                <p style={{ textAlign: 'center' }}>
+                                    <Button>Bạn Thật Tuyệt Vời! Đã xem hết ảnh luôn !!!</Button>
+                                </p>
+                            }>
+                             {this.state.posts.map(item => <Post id={item._id} key={item._id} images={item.images} name={item.titles.vn}/>)}
+                        </InfiniteScroll>
             </div>
         )
     }
 }
 const mapStateToProps = state => {
-    return {items : state }
+    return { items: state }
 }
 
 const mapDispatchToProps = dispatch => ({
-    Dang_Nhap: (user) => dispatch({type:'DANG_NHAP', username:user}),
-    Dang_xuat: () =>dispatch({type: 'DANG_XUAT', username: 'ok da dang xuat'})
+    Dang_Nhap: (user) => dispatch({ type: 'DANG_NHAP', username: user }),
+    Dang_xuat: () => dispatch({ type: 'DANG_XUAT', username: 'ok da dang xuat' })
 })
 export default connect(mapDispatchToProps, mapDispatchToProps)(HomePage);

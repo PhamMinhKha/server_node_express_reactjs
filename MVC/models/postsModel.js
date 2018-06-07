@@ -13,6 +13,8 @@ var Schema =  mongoose.Schema({
             user_ObjectId: { type: mongoose.Schema.Types.ObjectId, default: "5b0fba657ae4f53f8cf82a91" },
             upVote: {type: Number, default: 0},
             downVote: {type: Number, default: 0},
+            sourceDomain: {type: String},
+            slug: {type: String, unique: true},
             status: { type: String, default: 'New'} // Hot, Trend, New
         })
    

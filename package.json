@@ -28,6 +28,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "file-loader": "^1.1.11",
     "jquery": "^3.3.1",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.1.2",
@@ -36,6 +37,7 @@
     "passport-local": "^1.0.0",
     "popper.js": "^1.14.3",
     "qs": "^6.5.2",
+    "randomstring": "^1.1.5",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-html-parser": "^2.0.2",
@@ -45,11 +47,13 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-sticky": "^6.0.2",
     "reactstrap": "^6.0.1",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "request": "^2.87.0",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "sticky-sidebar": "^3.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

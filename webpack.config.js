@@ -45,7 +45,7 @@ module.exports = {
         }]
       },
       {
-        
+
         test: /\.jsx?$/,
         include: [
           path.resolve(__dirname, "app")
@@ -62,6 +62,17 @@ module.exports = {
           presets: ["env", "react"],
           plugins: ['transform-class-properties']
         },
+      },
+      {
+        test: /\.(mov|mp4)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]'
+            }  
+          }
+        ]
       }
     ]
   }
