@@ -43,9 +43,6 @@ class fetch9Gag extends Component {
             });
 
     }
-    htmlRender() {
-        return (<h5>ok</h5>)
-    }
     loadMore(e) {
         console.log(e)
         axios.defaults.headers.get['Content-Type'] = 'application/json; charset=utf-8';
@@ -90,7 +87,9 @@ class fetch9Gag extends Component {
         if(item.categories.indexOf("5b1373438ef25b0bfa05ab50") !== -1)
             {
                 video =  {
-                    url: item.images.image460sv.h265Url,
+                    url: item.images.image460sv.url,
+                    h265Url: item.images.image460sv.h265Url,
+                    vp9Url: item.images.image460sv.vp9Url,
                     duration: item.images.image460sv.duration,
                     hasAudio: item.images.image460sv.hasAudio,
                     height: item.images.image460sv.height,
@@ -145,7 +144,7 @@ class fetch9Gag extends Component {
                 if (item.type === "Animated") {
                     var img = (
                                (
-                               <video onPause={e => console.log(e)} id={'video_'+ item.id} ref={this.listRef} loop className="post-content video center"  preload="none"  poster={item.images.image460.url}  controls>
+                               <video onPause={e => console.log(e)} id={'video_'+ item.id} ref={this.listRef} loop className="post-content video center"  preload="auto"  poster={item.images.image460.url}  controls>
                             <source src={item.images.image460sv.url} type="video/mp4" />
                             Your browser does not support the video tag.
                             

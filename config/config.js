@@ -3,6 +3,7 @@ const config = {
     'domain': 'teghe.fun',
     'connectdb' : 'mongodb://localhost/data',
     'limit': 3,
+    'cdnDomain': 'localhost:4000',
 }
 
 module.exports = config

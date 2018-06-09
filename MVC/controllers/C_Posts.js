@@ -21,8 +21,14 @@ exports.luuAnh = async function (req, res) {
         console.log(check);
         req.body.image.url = check;
         var check_video = await saveFile(req.body.folder+'_'+req.body.id, req.body.folder, req.body.video.url);
+        var check_video_h265 = await saveFile(req.body.folder+'_h265Url_'+req.body.id, req.body.folder, req.body.video.h265Url);
+        var check_video_vp9Url = await saveFile(req.body.folder+'_vp9Url_'+req.body.id, req.body.folder, req.body.video.vp9Url);
         if(check_video)
-        req.body.video.url = check_video;
+        {
+            req.body.video.url = check_video;
+            req.body.video.h265Url = check_video_h265;
+            req.body.video.vp9Url = check_video_vp9Url;
+        }
     }
     else  req.body.image.url = check;
     var slug = randomstring.generate(7);

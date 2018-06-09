@@ -6,9 +6,9 @@ exports.handleScroll = (event) => {
         var test = isOnScreen($(this));
         if (test) {
             try {
-                // console.log(video.readyState );
+                console.log(video.readyState );
                 var isPlaying = !(video.currentTime > 0) && !video.ended &&
-                    video.readyState >= 2;
+                    video.readyState >= 4;
 
                 if (isPlaying) {
                     video.play();
