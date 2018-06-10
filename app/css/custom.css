@@ -40,6 +40,7 @@ a h3{
 }
 a:hover{
     text-decoration: none;
+    color:#3f3d3d;
 }
 .post-meta {
     text-decoration: none;
@@ -59,13 +60,13 @@ a:hover{
     height: 50px;
 }
 .post-afterbar-a{
-    display: block;
+    display: -webkit-inline-box;;
     color: #fff;
     font-weight: bold;
     height: 39px;
     background-color: #f4f4f4;
     line-height: 39px;
-    padding: 0 15px 0 15px;
+    padding: 0 7px 0 7px;
     border-radius: 2px;
     text-align: center;
     color: #fff !important;
@@ -120,4 +121,91 @@ a:hover{
 }
 .posts-wapper{
     background-color: #3498db;
+}
+.comment-box.first {
+    border-top: none;
+    padding-top: 10px;
+}
+.comment-box .avatar {
+    float: left;
+    overflow: hidden;
+}
+.comment-box .avatar .image-container {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    background-color: #f4f4f4;
+}
+.comment-box .avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.comment-box .payload {
+    margin-left: 60px;
+}
+.comment-box .payload .textarea-container textarea.focus, .comment-box.indent-1 .payload .textarea-container textarea {
+    height: 50px;
+    cursor: text;
+    border-bottom: none;
+}
+.comment-box .action {
+    height: 38px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-top-color: #eee;
+}
+.comment-box .action:before, .comment-box .action:after {
+    display: table;
+    content: '';
+}
+ .comment-box .payload textarea,  .comment-box .payload input[type='url'] {
+    width: 100%;
+    margin: 0;
+    height: 50px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 0;
+    line-height: 1.6em;
+    cursor: pointer;
+}
+ textarea,  input[type='url'] {
+    outline: none;
+    line-height: 20px;
+    padding: 6px 9px;
+    margin: 6px 0;
+    display: block;
+    border: 1px solid #ccc;
+    font: 13px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+ input[type='text'],  input[type='email'],  input[type='password'],  input[type='url'],  textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+.iconEmoji{
+    display: block;
+    float: left;
+    width: 30px;
+    height: 30px;
+    text-indent: -999px;
+    overflow: hidden;
+    margin-right: 10px;
+}
+.cmnt-reaction{
+    color: #9999;
+}
+a.cmnt-btn {
+    color: #fff;
+    background-color: #09f;
+    padding: 2px 13px;
+    border: 1px solid #09f;
+    border-radius: 3px;
+    font: bold 14px/20px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    -webkit-appearance: none;
+    margin-left: 10px;
 }

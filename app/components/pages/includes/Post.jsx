@@ -5,7 +5,7 @@ import IconChat from 'react-icons/lib/io/chatbox-working';
 import IconMore from 'react-icons/lib/io/android-more-horizontal';
 import IconFacebook from 'react-icons/lib/io/social-facebook';
 import IconGoogle from 'react-icons/lib/io/social-googleplus';
-
+import {Link} from 'react-router-dom';
 
 class Post extends Component {
     render() {
@@ -22,9 +22,9 @@ class Post extends Component {
                 </video>)
         }
         return (<article id={this.props.id}>
-            <a href="">
+            <Link to={'v/'+this.props.slug}>
                 <h3>{this.props.name}</h3>
-            </a>
+            </Link>
             <div className="post-container">
                 {img}
             </div>
@@ -45,9 +45,8 @@ class Post extends Component {
                 </ul>
                 <ul className="group-control-post pull-right">
                     <li><a href="http://www.facebook.com/sharer.php?u=https://simplesharebuttons.com" rel="nofollow" className=" post-afterbar-a facebook">
-                    <IconFacebook style={{height:30, width:30}}/> Facebook
+                    <IconFacebook style={{height:30, width:30}}/> <span className="d-none d-sm-block">Facebook</span>
         </a></li>
-                    <li className="btn-control"><a href="javascript:void(0);" rel="nofollow"><IconDown style={{height:30, width:30}}/></a></li>
                 </ul>
             </div>
             <div className="clearfix margin-top-bottom-5 ">

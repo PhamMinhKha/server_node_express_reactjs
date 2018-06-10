@@ -6,6 +6,7 @@ import Post from './includes/Post.jsx';
 import { handleScroll } from './script/viewport';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Container, Row, Col, Button } from 'reactstrap';
+
 class HomePage extends Component {
     constructor(props) {
         super(props);
@@ -16,6 +17,13 @@ class HomePage extends Component {
         }
     }
     componentDidMount() {
+        if(this.props.items.HotPage !== null)
+        {
+            return this.setState({
+                posts: this.props.items.HotPage.posts,
+                trang: this.props.items.HotPage.trang
+            })
+        }
         window.addEventListener('scroll', handleScroll);
         axios.get('/loadMore/' + this.state.trang)
             .then((res) => {
@@ -27,6 +35,7 @@ class HomePage extends Component {
                         posts: res.data.posts,
                         trang: res.data.trang,
                     });
+                    this.props.cap_nhat_posts({posts:res.data.posts, trang: 1});
                 }
             });
 
@@ -49,6 +58,7 @@ class HomePage extends Component {
                         posts: new_posts,
                         trang: res.data.trang,
                     });
+                    this.props.cap_nhat_posts({posts:new_posts, trang: 1});
                 }
             }).catch((err) => {
                 console.log(err);
@@ -78,7 +88,7 @@ class HomePage extends Component {
                                 <Button>Bạn Thật Tuyệt Vời! Đã xem hết ảnh luôn !!!</Button>
                             </p>
                         }>
-                        {this.state.posts.map(item => <Post id={item._id} key={item._id} images={item.images} name={item.titles.vn} />)}
+                        {this.props.items.HotPage ?  this.props.items.HotPage.posts.map(item => <Post id={item._id} key={item._id} slug={item.slug} images={item.images} name={item.titles.vn} />) : ''}
                     </InfiniteScroll>
                     </Col>
                     <Col  xs="12" sm="4">
@@ -94,7 +104,6 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    Dang_Nhap: (user) => dispatch({ type: 'DANG_NHAP', username: user }),
-    Dang_xuat: () => dispatch({ type: 'DANG_XUAT', username: 'ok da dang xuat' })
+    cap_nhat_posts: (posts) => dispatch({ type: 'CAP_NHAT_POSTS_HOT_PAGE', posts }),
 })
-export default connect(mapDispatchToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

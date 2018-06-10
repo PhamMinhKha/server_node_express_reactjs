@@ -44,13 +44,14 @@ function isOnScreen(ele) {
             top: win.scrollTop(),
             left: win.scrollLeft()
         };
+        // console.log(win.scrollTop());
         viewport.right = viewport.left + win.width();
         viewport.bottom = viewport.top + win.height();
 
         var bounds = ele.offset();
         bounds.right = bounds.left + ele.outerWidth();
-        bounds.bottom = bounds.top + ele.outerHeight();
-
+        bounds.bottom = bounds.top + ele.outerHeight() + 100;
+        // console.log(bounds.top, ' ', viewport.bottom);
         return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
     } catch (err) {
         console.log('err' + err);

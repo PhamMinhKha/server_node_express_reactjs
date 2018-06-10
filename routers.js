@@ -1,9 +1,11 @@
 var express = require('express');
+const server = express();
 var router = express.Router();
 const bodyParser = require('body-parser');
 var passport = require('passport'),
   Strategy = require('passport-local').Strategy,
   FacebookStrategy = require('passport-facebook').Strategy;
+
 
 // create application/json parser
 var jsonParser = bodyParser.json();
@@ -11,22 +13,24 @@ var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({
   extended: true
 });
-
+// server.use(fileUpload());
 // Require controller modules.
 const HotPage = require('./MVC/controllers/C_HotPage');
 const Users = require('./MVC/controllers/C_Users');
 const New = require('./MVC/controllers/C_NewPage');
+const C_ViewPage = require('./MVC/controllers/C_ViewPage');
 const C_Category = require('./MVC/controllers/C_Category');
 const fetch9Gag = require('./MVC/controllers/C_fetch9Gag');
 const fetchXemVN = require('./MVC/controllers/C_fetchXemVN');
 const fetchHaiVN = require('./MVC/controllers/C_fetchHaiVN');
+const C_Comment = require('./MVC/controllers/C_Comment');
 const dbuser = require('./MVC/models/usersModel');
 const C_Posts = require('./MVC/controllers/C_Posts');
 // var book_controller = require('../controllers/bookController');
 // var author_controller = require('../controllers/authorController');
 // var genre_controller = require('../controllers/genreController');
 // var book_instance_controller = require('../controllers/bookinstanceController');
-
+// Khach truy cap
 router.get('/', HotPage.HotPage);
 router.get('/loadCategories', C_Category.loadCategory);
 router.route('/login').get(Users.login);
@@ -51,6 +55,9 @@ router.get('/auth/facebook/callback',function(req, res, next){
   })(req, res, next);
 }
  );
+ router.route('/v/:slug').get(C_ViewPage.Index);
+ router.route('/view/:slug').get(C_ViewPage.View);
+ router.post('/upload/comment', C_Comment.uploadFile);
 // .post(passport.authenticate('local', {
 //   successRedirect: '/',
 //   failureRedirect: '/ok'
