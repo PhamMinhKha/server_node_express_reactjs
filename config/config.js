@@ -1,5 +1,5 @@
 const config = {
-    'secret': 'akjfh@#^%*GGJJHSĐ81273agsdh.adm;as',
+    'secret': 'akjfh@#^%*GGJJHSĐ81273agsdhadmas',
     'domain': 'teghe.fun',
     'connectdb' : 'mongodb://localhost/data',
     'limit': 3,

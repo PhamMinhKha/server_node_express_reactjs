@@ -3,6 +3,8 @@ const mongodb = require('./../models/basicModel');
 const usersModel = require('./../models/usersModel');
 const jwt = require('jsonwebtoken');
 const saveFile = require('./../utilities/saveFile');
+const config = require('./../../config/config');
+var passport = require('passport');
 
 exports.login = (req, res) => {
     res.render('index');
@@ -19,9 +21,14 @@ let CM_xuLyLogin = (txtUserName) => {
     })
 }
 exports.checkLogin = (req, res, callback) => {
-    if(req.session.token)
+    var token = req.body.token;
+    if(req.session.token || token)
     {
-        jwt.verify(req.session.token, 'a7612khASFSD', function(err, decoded) {
+        if(!req.session.token)
+        {
+            req.session.token = token;
+        }
+        jwt.verify(req.session.token, config.secret, function(err, decoded) {
             if (err) {
                 return callback(false, null);
             }else{
@@ -33,15 +40,21 @@ exports.checkLogin = (req, res, callback) => {
     return callback(false, null);
 }
 exports.checkLoginAxios = (req, res, callback) => {
-    if(req.session.token)
+    var token = req.body.token;
+    if(req.session.token || token)
     {
-        jwt.verify(req.session.token, 'a7612khASFSD', function(err, decoded) {
+        if(!req.session.token)
+        {
+            req.session.token = token;
+        }
+        jwt.verify(req.session.token, config.secret, function(err, decoded) {
             if (err) {
                 return res.send(false);
             }else{
-            return res.json(decoded)}
+                decoded = decoded.data;
+                // console.log(req.session)
+                return res.json({ten: decoded.ten, quyen_hang: decoded.quyen_hang, _id: decoded._id, token: token})}
           });
-        
     }
     else
     return res.send(false);
@@ -85,7 +98,7 @@ exports.token = function(user){
         exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 15),
         // exp: Math.floor(Date.now() / 1000) + (10),
         data: user
-    }, 'a7612khASFSD');
+    }, config.secret);
     return token;
 }
 exports.cryptPassword = function (password, callback) {

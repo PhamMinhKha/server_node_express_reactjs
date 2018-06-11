@@ -25,12 +25,12 @@ class navBar extends Component {
       }
       componentDidMount = () => {
         const props = this.props;
-        axios.post('/checklogin')
+        const token = localStorage.getItem('Login');
+        axios.post('/checklogin', {token})
         .then(function (response) {
           if(response.data !== false)
           {
-            console.log(response.data.data.ten);
-            let user = {username: response.data.data.ten, permission: response.data.data.quyen_hang};
+            let user = {username: response.data.ten, permission: response.data.quyen_hang, id: response.data._id, token: response.data.token};
             props.Dang_Nhap(user);
           }
         })
@@ -107,7 +107,7 @@ class navBar extends Component {
                       </DropdownItem>
                       <DropdownItem divider />
                       <DropdownItem>
-                        <NavLink href="/logout" style={{color:"gray"}}>Thoát</NavLink>
+                        <NavLink href="/logout" onClick={() => localStorage.clear()} style={{color:"gray"}}>Thoát</NavLink>
                       </DropdownItem>
                     </DropdownMenu>
                   </UncontrolledDropdown>

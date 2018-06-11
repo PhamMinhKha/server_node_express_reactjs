@@ -38,10 +38,11 @@ class LoginPage extends Component {
         // config: { headers: {'Content-Type': 'application/x-www-form-urlencoded' }}
         };
         axios(options).then((data)=>{
-            var {message, username, quyen_hang} = data.data.detail;
+            var {message, username, quyen_hang, token, id} = data.data.detail;
             if(message === true){
-                let user = {username, permission: quyen_hang};
+                let user = {username, permission: quyen_hang, id};
                 this.props.Dang_Nhap(user);
+                localStorage.setItem('Login', token);
                 this.props.history.push('/');
             }
             else this.setState({

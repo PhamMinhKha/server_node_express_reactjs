@@ -58,7 +58,7 @@ class HomePage extends Component {
                         posts: new_posts,
                         trang: res.data.trang,
                     });
-                    this.props.cap_nhat_posts({posts:new_posts, trang: 1});
+                    this.props.cap_nhat_posts({posts:new_posts, trang: res.data.trang});
                 }
             }).catch((err) => {
                 console.log(err);

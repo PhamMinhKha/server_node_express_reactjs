@@ -32,7 +32,7 @@ server.use('/', router);
 server.set('view engine', 'ejs');
 server.set('views', './MVC/views');
 server.use(express.static('./public'));
-server.use(express.static(path.join(__dirname, 'public/images/9Gag')));
+// server.use(express.static(path.join(__dirname, 'public/images/9Gag')));
 
 
 server.use(function(req, res, next) {

@@ -57,7 +57,8 @@ router.get('/auth/facebook/callback',function(req, res, next){
  );
  router.route('/v/:slug').get(C_ViewPage.Index);
  router.route('/view/:slug').get(C_ViewPage.View);
- router.post('/upload/comment', C_Comment.uploadFile);
+ router.post('/upload/comment', kiem_tra_dang_nhap , C_Comment.uploadFile);
+ router.post('/submitComment', checkLoginToken , jsonParser , C_Comment.submitComment);
 // .post(passport.authenticate('local', {
 //   successRedirect: '/',
 //   failureRedirect: '/ok'
@@ -85,23 +86,14 @@ router.route('/login').post(function (req, res, next) {
   })(req, res, next);
 });
 
-router.route('/dangnhap').post(jsonParser, passport.authenticate('loginUsers', {
-  // successRedirect: '/ok',
-  // failureRedirect: '/fuck'
-}));
-// router.route('/ok').get((req, res)=>{
-//     console.log(req.isAuthenticated());
-//     if(!req.isAuthenticated())
-//     res.send('chua dang nhap');
-//     else res.send('da dang nhap');
-// })
-router.get('/ok', ensureAuthenticated, (req, res) => {
-  // console.log(req.session);
 
-  res.send('ok')
-})
+// router.get('/ok', ensureAuthenticated, (req, res) => {
+//   // console.log(req.session);
+
+//   res.send('ok')
+// })
 // router.route('/login').get(Users.login).post(jsonParser, Users.xuLyLogin);
-router.route('/checklogin').post(jsonParser, Users.checkLoginAxios);
+router.route('/checklogin').post(jsonParser, checkLoginToken, Users.checkLoginAxios);
 router.route('/New').get(New.Index).post(New.Index);
 router.route('/LuuAnh').post(jsonParser, C_Posts.luuAnh);
 // router.route('/fetch9Gag').get(ensureAuthenticated, requireAdmin, fetch9Gag.Index).post(jsonParser, fetch9Gag.fetchPosts);
@@ -141,6 +133,7 @@ passport.use('loginUsers', new Strategy(
             return done(null, user, {
               message: true,
               username: user.ten,
+              id: user._id,
               quyen_hang: user.quyen_hang,
               token: Users.token(user)
             });
@@ -157,7 +150,14 @@ passport.use('loginUsers', new Strategy(
 passport.serializeUser((user, done) => {
   done(null, user.ten_dang_nhap);
 })
-
+function kiem_tra_dang_nhap(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  else {
+    return res.json({error: "chưa đăng nhập"});
+  }
+}
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -171,6 +171,22 @@ passport.deserializeUser(function (user, done) {
     done(err, user);
   });
 });
+
+function checkLoginToken(req, res, next){
+  Users.checkLogin(req, res, (status, data) => {
+    if (status) {
+      req.logIn(data.data, function (err) {
+        if (err) {
+          console.log(err)
+          return next(err);
+        } else {
+          req.body._id = data.data._id;
+          return next();
+        }
+      });
+    }
+  })
+}
 
 function requireAdmin(req, res, next) {
   Users.checkLogin(req, res, (status, data) => {

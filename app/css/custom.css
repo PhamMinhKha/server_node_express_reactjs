@@ -150,6 +150,9 @@ a:hover{
     cursor: text;
     border-bottom: none;
 }
+.textarea-container{
+    border:1px solid #ccc
+}
 .comment-box .action {
     height: 38px;
     padding: 5px 10px;
@@ -208,4 +211,35 @@ a.cmnt-btn {
     text-align: center;
     -webkit-appearance: none;
     margin-left: 10px;
+}
+#fixed_btn {
+    position: fixed;
+    bottom: 20px;
+    left: 30px;
+    z-index: 99;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+  }
+.holder_uploading_image_comment{
+    width:100px;
+    height:100px;
+    background-color: #9999;
+    position: relative;
+    margin: 0px 0px 10px 10px;
+    display: table;
+}
+.holder_uploading_image_comment .loading{
+    position: absolute;
+    left:35%;
+    top:35%
+}
+.comment_img{
+    max-width: 200px;
+    height: auto;
 }
