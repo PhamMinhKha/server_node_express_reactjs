@@ -115,14 +115,22 @@ class ViewPage extends Component {
         post('/submitComment',{
             image: this.state.loadingUpload,
             content: this.state.textarea
-        }, (err, res) => {
+        }).then((err, res) => {
+            console.log(res);
             if(err){
                 this.setState({
                     error: err
                 })
             }
             else {
-                console.log(res)
+                if(res.data.success)
+                {
+                    console.log(res.data)
+                    // this.setState({
+                    //     // loadingUpload: null,
+                    //     textarea: ''
+                    // })
+                }
             }
         })
     }

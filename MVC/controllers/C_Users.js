@@ -22,42 +22,41 @@ let CM_xuLyLogin = (txtUserName) => {
 }
 exports.checkLogin = (req, res, callback) => {
     var token = req.body.token;
-    if(req.session.token || token)
-    {
-        if(!req.session.token)
-        {
+    if (req.session.token || token) {
+        if (!req.session.token) {
             req.session.token = token;
         }
-        jwt.verify(req.session.token, config.secret, function(err, decoded) {
+        jwt.verify(req.session.token, config.secret, function (err, decoded) {
             if (err) {
                 return callback(false, null);
-            }else{
-            return callback(true, decoded);}
-          });
-        
+            } else {
+                return callback(true, decoded);
+            }
+        });
+
     }
     else
-    return callback(false, null);
+        return callback(false, null);
 }
 exports.checkLoginAxios = (req, res, callback) => {
     var token = req.body.token;
-    if(req.session.token || token)
-    {
-        if(!req.session.token)
-        {
+    if (req.session.token || token) {
+        if (!req.session.token) {
             req.session.token = token;
         }
-        jwt.verify(req.session.token, config.secret, function(err, decoded) {
+        else token = req.session.token;
+        jwt.verify(req.session.token, config.secret, function (err, decoded) {
             if (err) {
                 return res.send(false);
-            }else{
+            } else {
                 decoded = decoded.data;
                 // console.log(req.session)
-                return res.json({ten: decoded.ten, quyen_hang: decoded.quyen_hang, _id: decoded._id, token: token})}
-          });
+                return res.json({ ten: decoded.ten, quyen_hang: decoded.quyen_hang, _id: decoded._id, token: token })
+            }
+        });
     }
     else
-    return res.send(false);
+        return res.send(false);
 }
 exports.xuLyLogin = async (req, res) => {
     let {
@@ -67,32 +66,33 @@ exports.xuLyLogin = async (req, res) => {
     let userPromise = CM_xuLyLogin(txtUserName);
     var user = await userPromise.then((userInfo) => {
         return userInfo;
-    }, err => { res.send(false)});
-    if(user)
-    this.comparePassword(txtPassWord, user.mat_khau, (err, match) => {
-        if (err)
-            res.send(err)
-        else {
-            if (match === true) {
-                user.mat_khau = '';
-                let token = jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 15),
-                    // exp: Math.floor(Date.now() / 1000) + (10),
-                    data: user
-                }, 'a7612khASFSD');
-                req.session.token = token;
-                res.send(match)
-            }
-            else {token
-                res.send(match)
-            }
-            
+    }, err => { res.send(false) });
+    if (user)
+        this.comparePassword(txtPassWord, user.mat_khau, (err, match) => {
+            if (err)
+                res.send(err)
+            else {
+                if (match === true) {
+                    user.mat_khau = '';
+                    let token = jwt.sign({
+                        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 15),
+                        // exp: Math.floor(Date.now() / 1000) + (10),
+                        data: user
+                    }, 'a7612khASFSD');
+                    req.session.token = token;
+                    res.send(match)
+                }
+                else {
+                    token
+                    res.send(match)
+                }
 
-        }
-    })
+
+            }
+        })
 
 }
-exports.token = function(user){
+exports.token = function (user) {
     user.mat_khau = 'chắc dễ ăn lắm kaka';
     let token = jwt.sign({
         exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 15),
@@ -102,7 +102,7 @@ exports.token = function(user){
     return token;
 }
 exports.cryptPassword = function (password, callback) {
-   bcrypt.genSalt(10, function (err, salt) {
+    bcrypt.genSalt(10, function (err, salt) {
         if (err)
             return callback(err);
 
@@ -111,17 +111,18 @@ exports.cryptPassword = function (password, callback) {
         });
     });
 };
-exports.tao_mat_khau = (password) =>{
-    return new Promise((resolve, reject)=>{
+exports.tao_mat_khau = (password) => {
+    return new Promise((resolve, reject) => {
         bcrypt.genSalt(10, function (err, salt) {
             if (err)
                 reject(err);
-    
+
             bcrypt.hash(password, salt, function (err, hash) {
                 resolve(hash);
             });
         });
-})} 
+    })
+}
 exports.comparePassword = function (plainPass, hashword, callback) {
     bcrypt.compare(plainPass, hashword, function (err, isPasswordMatch) {
         return err == null ?
@@ -129,7 +130,7 @@ exports.comparePassword = function (plainPass, hashword, callback) {
             callback(err);
     });
 };
-exports.test = (req, res) =>{
+exports.test = (req, res) => {
     res.send(
         `
         <form method="post" action="/dangnhap">
@@ -139,33 +140,41 @@ exports.test = (req, res) =>{
         </form>`
     );
 }
-exports.logOut = (req, res) =>{
+exports.logOut = (req, res) => {
     req.session.destroy();
     res.redirect('/');
 }
 exports.findOrCreate = async (profile, callback) => {
-    console.log(profile.emails[0].value);
-    await usersModel.findOne({email: profile.emails[0].value}, async (err, data)=>{
-        if(err)
-        return callback(err)
+    await usersModel.findOne({ email: profile.emails[0].value }, async (err, data) => {
+        if (err)
+            return callback(err)
         else {
-            if(data === null)// toa user moi
+            if (data === null)// toa user moi
             {
-                var mat_khau = await this.tao_mat_khau(Date.now() + 'asd').then((hash)=>{
+                var mat_khau = await this.tao_mat_khau(Date.now() + config.secret).then((hash) => {
                     return hash;
                 });
                 var anh = await saveFile(profile.id, 'avatar', profile.photos[0].value);
                 var user = usersModel.create({
                     ten_dang_nhap: profile.id,
-                    mat_khau,
+                    mat_khau: mat_khau,
                     email: profile.emails[0].value,
                     anh_dai_dien: anh,
                     ten: profile.displayName,
-                    mang_xa_hoi: {facebook: [{id: profile.id}]}
+                    mang_xa_hoi: { facebook: [{ id: profile.id }] }
+                }, async (err, doc) => {
+                    if(err)
+                    throw err;
+                    else {
+                    var _token = this.token(doc);
+                    doc.token = _token;
+                    return callback(null, doc)
+                }
                 })
-                return callback(null, user)
             }
             else {//tra user co trong database
+                var _token = this.token(data);
+                data.token = _token;
                 return callback(null, data)
             }
         }

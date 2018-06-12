@@ -58,7 +58,7 @@ router.get('/auth/facebook/callback',function(req, res, next){
  router.route('/v/:slug').get(C_ViewPage.Index);
  router.route('/view/:slug').get(C_ViewPage.View);
  router.post('/upload/comment', kiem_tra_dang_nhap , C_Comment.uploadFile);
- router.post('/submitComment', checkLoginToken , jsonParser , C_Comment.submitComment);
+ router.post('/submitComment', kiem_tra_dang_nhap , jsonParser , C_Comment.submitComment);
 // .post(passport.authenticate('local', {
 //   successRedirect: '/',
 //   failureRedirect: '/ok'
@@ -148,7 +148,7 @@ passport.use('loginUsers', new Strategy(
 ));
 
 passport.serializeUser((user, done) => {
-  done(null, user.ten_dang_nhap);
+  done(null, user._id );
 })
 function kiem_tra_dang_nhap(req, res, next) {
   if (req.isAuthenticated()) {
@@ -164,9 +164,9 @@ function ensureAuthenticated(req, res, next) {
   }
   res.redirect('/login');
 }
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser(function (_id, done) {
   dbuser.findOne({
-    ten_dang_nhap: user
+    _id: _id
   }, function (err, user) {
     done(err, user);
   });
@@ -214,12 +214,14 @@ passport.use('facebook', new FacebookStrategy({
         return done(err);
       }
       else
+      {
         return done(null, user, {
               message: true,
               username: user.ten_dang_nhap,
               permission: user.quyen_hang,
-              token: Users.token(user)
-        });
+              token: user.token,
+              _id: user._id
+        });}
     });
   }
 ));

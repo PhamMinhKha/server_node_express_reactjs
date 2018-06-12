@@ -10,7 +10,8 @@ function getFileExtension(filename){
 
 
 const saveFile = (filename = String, folder = String, url = String) => {
-  var ext = getFileExtension(url);
+  if(folder !== "avatar")  var ext = getFileExtension(url);
+  else var ext = 'jpg';
   return new Promise((thanhCong, thatBai) => {
     var file = fs.createWriteStream('public/images/' + folder + '/' + filename + '.' + ext);
     var n = url.indexOf("https");

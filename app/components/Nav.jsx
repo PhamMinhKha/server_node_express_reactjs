@@ -31,6 +31,7 @@ class navBar extends Component {
           if(response.data !== false)
           {
             let user = {username: response.data.ten, permission: response.data.quyen_hang, id: response.data._id, token: response.data.token};
+            localStorage.setItem('Login', response.data.token);
             props.Dang_Nhap(user);
           }
         })
