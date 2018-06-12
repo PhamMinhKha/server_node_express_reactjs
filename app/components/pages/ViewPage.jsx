@@ -112,25 +112,21 @@ class ViewPage extends Component {
         })}
     }
     PostComment(){
-        post('/submitComment',{
+        axios.post('/submitComment',{
             image: this.state.loadingUpload,
             content: this.state.textarea
-        }).then((err, res) => {
-            console.log(res);
-            if(err){
+        }).then((res) => {
+            if(res.error){
                 this.setState({
-                    error: err
+                    error: res.error
                 })
             }
             else {
-                if(res.data.success)
-                {
-                    console.log(res.data)
-                    // this.setState({
-                    //     // loadingUpload: null,
-                    //     textarea: ''
-                    // })
-                }
+                    this.setState({
+                        loadingUpload: null,
+                        textarea: '',
+                        charCount: 1000
+                    })
             }
         })
     }
