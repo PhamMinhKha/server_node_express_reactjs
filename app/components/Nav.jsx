@@ -31,7 +31,6 @@ class navBar extends Component {
     axios.post('/checklogin', { token })
       .then(function (response) {
         if (response.data !== false) {
-          console.log('---', response.data)
           let user = {
             username: response.data.ten,
             permission: response.data.quyen_hang, 
@@ -62,7 +61,6 @@ class navBar extends Component {
     });
   }
   render() {
-    console.log('====', this.props)
     // let isLogin = this.props.items.Login;
     let isLogin = (this.props.items.Login.username !== "") ? this.props.items.Login.username : null;
     let menuAdmin = [{ link: '/fetch9Gag', name: '9Gag' }, { link: '/fetchHaivn', name: 'HaiVN' }];

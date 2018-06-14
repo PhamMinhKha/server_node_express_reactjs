@@ -212,7 +212,7 @@ class ViewPage extends Component {
                                         <div className="avatar">
                                             <div className="image-container">
                                                 <a href="https://9gag.com/u/phamminhkhatc" target="_blank">
-                                                    <img src={this.props.items.permission ? '/'+this.props.items.Login.avatar : '/images/avatar/noAvatar.jpg'} />
+                                                    <img src={this.props.items.Login.permission ? '/'+this.props.items.Login.avatar : '/images/avatar/noAvatar.jpg'} />
                                                 </a>
                                             </div>
                                         </div>
