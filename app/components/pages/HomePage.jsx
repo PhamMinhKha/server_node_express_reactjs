@@ -17,6 +17,7 @@ class HomePage extends Component {
         }
     }
     componentDidMount() {
+        document.title = "Trang Chủ"
         if(this.props.items.HotPage !== null)
         {
             return this.setState({

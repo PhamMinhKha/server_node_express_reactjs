@@ -1,7 +1,6 @@
 const PostsModel = require('./../models/postsModel');
 const config = require('./../../config/config');
 exports.HotPage = function(req, res) {
-    console.log(req.session)
         res.render('index.ejs');
 };
 exports.loadMore = function(req, res) {

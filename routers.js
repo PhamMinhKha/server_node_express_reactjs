@@ -40,6 +40,7 @@ router.get('/auth/facebook', passport.authenticate('facebook', {
   profile: ['photos', 'gender', 'profileUrl', 'displayName', 'username']
 }));
 router.get('/auth/facebook/callback',function(req, res, next){
+  var url = require('url').parse(req.headers.referer, true)
   passport.authenticate('facebook', function(err, user, info){
       if(err){
       return next(err);
@@ -49,7 +50,7 @@ router.get('/auth/facebook/callback',function(req, res, next){
         return next(err);
       } else {
         req.session.token = info.token;
-        return res.redirect('/');
+        return res.redirect(url.query.ref);
       }
     });
   })(req, res, next);
@@ -134,6 +135,7 @@ passport.use('loginUsers', new Strategy(
               message: true,
               username: user.ten,
               id: user._id,
+              avatar: user.anh_dai_dien,
               quyen_hang: user.quyen_hang,
               token: Users.token(user)
             });
@@ -219,6 +221,7 @@ passport.use('facebook', new FacebookStrategy({
               message: true,
               username: user.ten_dang_nhap,
               permission: user.quyen_hang,
+              avatar: user.anh_dai_dien,
               token: user.token,
               _id: user._id
         });}

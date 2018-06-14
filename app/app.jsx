@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, withRouter } from "react-router-dom";
 import { createStore } from 'redux';
 import thunk from 'redux-thunk';
 // import 'bootstrap';
@@ -32,7 +32,7 @@ ReactDOM.render(
   <Provider store={store} >
     <Router>
     <div>
-     <Nav/>
+     <Nav />
       <Route exact path="/" component={HomePage} />
       <Route path="/v/:slug" component={ViewPage} />
       <Route path="/login" component={LoginPage} />

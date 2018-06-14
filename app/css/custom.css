@@ -1,3 +1,6 @@
+body{
+    font-family: 'Roboto Slab', serif;
+}
 .fullWidth{
     width: 100%;
 }
@@ -9,6 +12,9 @@
    }
 .margin-left-right-5{
     margin: 0 5px;
+}
+.margin-left-right-10{
+    margin: 0 10px;
 }
 .pull-left{
     float:left !important;
@@ -242,4 +248,29 @@ a.cmnt-btn {
 .comment_img{
     max-width: 200px;
     height: auto;
+}
+.list-comment .box-comment-1 .avatar .image-container a img{
+    height:50px;
+    width:50px;
+}
+.detail-comment a{
+    font-weight: bold;
+    color: black;
+}
+.small-text {
+color: #ccc;
+font-size:11px;
+}
+.box-comment-2{
+    clear: both;
+    margin-top:5px;
+    margin-left:50px
+}
+.control-comment{
+    color: #ccc;
+    font-size:13px
+}
+.control-comment:hover{
+    cursor: pointer;
+    color:rgba(112, 111, 111, 0.6);
 }

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import axios, {post} from 'axios';
+import axios, { post } from 'axios';
 import IconUp from 'react-icons/lib/io/arrow-up-a';
 import IconDown from 'react-icons/lib/io/arrow-down-a';
 import IconChat from 'react-icons/lib/io/chatbox-working';
@@ -47,28 +47,15 @@ class ViewPage extends Component {
 
     }
 
-    // componentDidMount() {
-    //     axios.get('/view/' + this.props.match.params.slug)
-    //         .then((res) => {
-    //             if (res.error) {
-    //                 alert('Không lấy được giữ liệu vu lòng bấm F5!');
-    //             }
-    //             else {
-    //                 console.log(res);
-    //                 this.setState({
-    //                     post: res.data
-    //                 });
-    //                 console.log(this.state.post)
-    //             }
-    //         });
-
-    // }
+    componentDidMount() {
+        // console.log(this.props)
+    }
     showFileUpload() {
         this.fileUpload.current.click();
-      }
+    }
     handleFileUpload(e) {
-        var file =e.target.files[0];
-        if(!file){
+        var file = e.target.files[0];
+        if (!file) {
             return console.log('Không chọ file');
         }
         this.setState({
@@ -76,61 +63,61 @@ class ViewPage extends Component {
         })
         const url = '/upload/comment';
         const formData = new FormData();
-        formData.append('file',file)
+        formData.append('file', file)
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
             }
         }
-        formData.append('slug',this.props.match.params.slug);
-        post(url, formData,config)
-        .then(res => {
-            if(res.data.error)
-            {
-                this.setState({
-                    error: res.data.error
-                })
-                document.getElementById('blob').value = null;
-                this.setState({
-                    loadingUpload: false
-                })
-            }
-            if(res.data.success)
-            {
-                this.setState({
-                    loadingUpload: res.data.success
-                })
-            }
-        })
-      }
-    onKeyDown(e){
-        var check = 1000 - e.target.value.length;
-        if(check >= 0){
-        this.setState({
-            textarea: e.target.value,
-            charCount: 1000 - e.target.value.length
-        })}
+        formData.append('slug', this.props.match.params.slug);
+        post(url, formData, config)
+            .then(res => {
+                if (res.data.error) {
+                    this.setState({
+                        error: res.data.error
+                    })
+                    document.getElementById('blob').value = null;
+                    this.setState({
+                        loadingUpload: false
+                    })
+                }
+                if (res.data.success) {
+                    this.setState({
+                        loadingUpload: res.data.success
+                    })
+                }
+            })
     }
-    PostComment(){
-        axios.post('/submitComment',{
+    onKeyDown(e) {
+        var check = 1000 - e.target.value.length;
+        if (check >= 0) {
+            this.setState({
+                textarea: e.target.value,
+                charCount: 1000 - e.target.value.length
+            })
+        }
+    }
+    PostComment() {
+        axios.post('/submitComment', {
             image: this.state.loadingUpload,
             content: this.state.textarea
         }).then((res) => {
-            if(res.error){
+            if (res.data.error) {
                 this.setState({
-                    error: res.error
+                    error: res.data.error
                 })
             }
             else {
-                    this.setState({
-                        loadingUpload: null,
-                        textarea: '',
-                        charCount: 1000
-                    })
+                this.setState({
+                    loadingUpload: null,
+                    textarea: '',
+                    charCount: 1000
+                })
             }
         })
     }
     render() {
+        // console.log(this.props.history)
         var post = this.state.post;
         var images = post.images;
         var img = null;
@@ -158,31 +145,29 @@ class ViewPage extends Component {
             </ContentLoader>
         )
         var uploadHolder = '';
-        if (this.state.loadingUpload === true ) 
-            {
-             uploadHolder = (<div className="loader center loading"></div>) 
-            }
-            else if(this.state.loadingUpload === false){
-                uploadHolder = ''
-            }
-            else{
-                let ext = ultis.getFileExtension(this.state.loadingUpload);
-                if(ext === "mp4")
-                {
-                    uploadHolder = ( <video autoPlay loop className="comment_img" preload="auto">
+        if (this.state.loadingUpload === true) {
+            uploadHolder = (<div className="loader center loading"></div>)
+        }
+        else if (this.state.loadingUpload === false) {
+            uploadHolder = ''
+        }
+        else {
+            let ext = ultis.getFileExtension(this.state.loadingUpload);
+            if (ext === "mp4") {
+                uploadHolder = (<video autoPlay loop className="comment_img" preload="auto">
                     <source src={'/tmp/' + this.state.loadingUpload} type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>)
-                }else
+            } else
                 uploadHolder = (<img src={'/tmp/' + this.state.loadingUpload} className="comment_img" />)
-            }
+        }
 
         return (
             <div className="main-content">
                 <Container>
                     <Row>
                         <Col xs="0" sm="2"></Col>
-                        <Col xs="12" sm="6">
+                        <Col xs="12" sm="6" style={{marginBottom: 50}}>
                             <article >
                                 <h3>{post.titles.vn ? post.titles.vn : loadingHolder}</h3>
                                 <div className="post-container">
@@ -223,11 +208,11 @@ class ViewPage extends Component {
                                 </ul>
                                 <div>
                                     <div className="comment-box first">
-                                        <p className="text-danger">{this.state.error ? <IconInfo className="text-danger" style={{height:25, width:25, marginTop:"-5"}}/>: ''} {this.state.error}</p>
+                                        <p className="text-danger">{this.state.error ? <IconInfo className="text-danger" style={{ height: 25, width: 25, marginTop: "-5" }} /> : ''} {this.state.error}</p>
                                         <div className="avatar">
                                             <div className="image-container">
                                                 <a href="https://9gag.com/u/phamminhkhatc" target="_blank">
-                                                    <img src="https://accounts-cdn.9gag.com/media/avatar/23546188_100_1.jpg" />
+                                                    <img src={this.props.items.permission ? '/'+this.props.items.Login.avatar : '/images/avatar/noAvatar.jpg'} />
                                                 </a>
                                             </div>
                                         </div>
@@ -237,16 +222,16 @@ class ViewPage extends Component {
                                                     <textarea value={this.state.textarea} onChange={(e) => this.onKeyDown(e)} placeholder="Write comments..." className="post-text-area focus">
                                                     </textarea>
                                                     {this.state.loadingUpload ? (<div id="uploadImgComment" className="holder_uploading_image_comment">
-                                                    {uploadHolder}
-                                                    </div>): ""}
+                                                        {uploadHolder}
+                                                    </div>) : ""}
                                                     {/* {this.state.loadingUpload !== false && this.state.loadingUpload !== true ? <a onClick={() => this.setState({loadingUpload: false})}>b</a>: ''} */}
                                                 </div>
                                             </div>
                                             <div className="action">
                                                 <div className="pull-left">
-                                                    <a href="http://memeful.com" className="cmnt-reaction" target="_blank"><IconEmoji className="iconEmoji"/></a>
-                                                        <a href="javascript:void(0)" onClick={()=>this.showFileUpload()} className="cmnt-reaction cmnt-image"><IconCamera className="iconEmoji" /></a>
-                                                        <input type="file" name="blob" ref={this.fileUpload} onChange={this.handleFileUpload.bind(this)}  id="blob" style={{display:"none"}} />
+                                                    <a href="http://memeful.com" className="cmnt-reaction" target="_blank"><IconEmoji className="iconEmoji" /></a>
+                                                    <a href="javascript:void(0)" onClick={() => this.showFileUpload()} className="cmnt-reaction cmnt-image"><IconCamera className="iconEmoji" /></a>
+                                                    <input type="file" name="blob" ref={this.fileUpload} onChange={this.handleFileUpload.bind(this)} id="blob" style={{ display: "none" }} />
                                                 </div>
                                                 <div className="pull-right">
                                                     <p className="word-count pull-left cmnt-reaction">
@@ -259,14 +244,64 @@ class ViewPage extends Component {
                                         <div className="clearfix">
                                         </div>
                                     </div>
+                                    {/*hien thi comment*/}
+                                    <div className="list-comment">
+                                        <div className="box-comment-1">
+                                            <div className="avatar pull-left">
+                                                <div className="image-container">
+                                                    <a href="https://9gag.com/u/phamminhkhatc" target="_blank">
+                                                        <img src="https://accounts-cdn.9gag.com/media/avatar/23546188_100_1.jpg" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div className="detail-comment pull-left margin-left-right-5">
+                                                <a className="margin-left-right-5">Pham Kha</a>
+                                                <span className="margin-left-right-5 small-text">500 đ</span>
+                                                <span className="margin-left-right-5 small-text">17m</span>
+                                                <p className="content-comment margin-left-right-5 clearfix">
+                                                    test giu lieu
+                                                </p>
+                                                <span className="margin-left-right-10 control-comment"><a>Trả lời</a></span>
+                                                <span className="margin-left-right-10 control-comment"><a><IconUp style={{height:15, width:15}}/></a></span>
+                                                <span className="margin-left-right-10 control-comment"><a><IconDown style={{height:15, width:15}}/></a></span>
+                                            </div>
+                                            <div className="clearfix row">
+                                            <div className="box-comment-2">
+                                            <div className="avatar pull-left">
+                                                <div className="image-container">
+                                                    <a href="https://9gag.com/u/phamminhkhatc" target="_blank">
+                                                        <img src="https://accounts-cdn.9gag.com/media/avatar/23546188_100_1.jpg" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div className="detail-comment pull-left margin-left-right-5">
+                                                <a className="margin-left-right-5">Pham Kha</a>
+                                                <span className="margin-left-right-5 small-text">500 đ</span>
+                                                <span className="margin-left-right-5 small-text">17m</span>
+                                                <p className="content-comment margin-left-right-5 clearfix">
+                                                    test giu lieu
+                                                </p>
+                                                <span className="margin-left-right-10 control-comment"><a>Trả lời</a></span>
+                                                <span className="margin-left-right-10 control-comment"><a><IconUp style={{height:15, width:15}}/></a></span>
+                                                <span className="margin-left-right-10 control-comment"><a><IconDown style={{height:15, width:15}}/></a></span>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </article>
                         </Col>
                     </Row>
                 </Container>
-                {(this.props.history.action === "PUSH")? <a id="fixed_btn" onClick={() => {this.props.history.goBack()}}>Trờ về</a> : ''}
+                {(this.props.history.action === "PUSH") ? <a id="fixed_btn" onClick={() => { this.props.history.goBack() }}>Trờ về</a> : ''}
             </div>
         )
     }
 }
-export default ViewPage;
+const mapStateToProps = (state) => {
+    return {
+        items: state
+    }
+}
+export default connect(mapStateToProps, null)(ViewPage);

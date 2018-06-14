@@ -34,8 +34,7 @@ exports.checkLogin = (req, res, callback) => {
             }
         });
 
-    }
-    else
+    } else
         return callback(false, null);
 }
 exports.checkLoginAxios = (req, res, callback) => {
@@ -43,19 +42,23 @@ exports.checkLoginAxios = (req, res, callback) => {
     if (req.session.token || token) {
         if (!req.session.token) {
             req.session.token = token;
-        }
-        else token = req.session.token;
+        } else token = req.session.token;
         jwt.verify(req.session.token, config.secret, function (err, decoded) {
             if (err) {
                 return res.send(false);
             } else {
                 decoded = decoded.data;
                 // console.log(req.session)
-                return res.json({ ten: decoded.ten, quyen_hang: decoded.quyen_hang, _id: decoded._id, token: token })
+                return res.json({
+                    ten: decoded.ten,
+                    quyen_hang: decoded.quyen_hang,
+                    _id: decoded._id,
+                    avatar:decoded.anh_dai_dien,
+                    token: token
+                })
             }
         });
-    }
-    else
+    } else
         return res.send(false);
 }
 exports.xuLyLogin = async (req, res) => {
@@ -66,7 +69,9 @@ exports.xuLyLogin = async (req, res) => {
     let userPromise = CM_xuLyLogin(txtUserName);
     var user = await userPromise.then((userInfo) => {
         return userInfo;
-    }, err => { res.send(false) });
+    }, err => {
+        res.send(false)
+    });
     if (user)
         this.comparePassword(txtPassWord, user.mat_khau, (err, match) => {
             if (err)
@@ -81,8 +86,7 @@ exports.xuLyLogin = async (req, res) => {
                     }, 'a7612khASFSD');
                     req.session.token = token;
                     res.send(match)
-                }
-                else {
+                } else {
                     token
                     res.send(match)
                 }
@@ -145,12 +149,15 @@ exports.logOut = (req, res) => {
     res.redirect('/');
 }
 exports.findOrCreate = async (profile, callback) => {
-    await usersModel.findOne({ email: profile.emails[0].value }, async (err, data) => {
+    await usersModel.findOne({
+        email: profile.emails[0].value
+    }, async (err, data) => {
         if (err)
             return callback(err)
         else {
-            if (data === null)// toa user moi
+            if (data === null) // toa user moi
             {
+                console.log('create')
                 var mat_khau = await this.tao_mat_khau(Date.now() + config.secret).then((hash) => {
                     return hash;
                 });
@@ -161,18 +168,21 @@ exports.findOrCreate = async (profile, callback) => {
                     email: profile.emails[0].value,
                     anh_dai_dien: anh,
                     ten: profile.displayName,
-                    mang_xa_hoi: { facebook: [{ id: profile.id }] }
+                    mang_xa_hoi: {
+                        facebook: [{
+                            id: profile.id
+                        }]
+                    }
                 }, async (err, doc) => {
-                    if(err)
-                    throw err;
+                    if (err)
+                        throw err;
                     else {
-                    var _token = this.token(doc);
-                    doc.token = _token;
-                    return callback(null, doc)
-                }
+                        var _token = this.token(doc);
+                        doc.token = _token;
+                        return callback(null, doc)
+                    }
                 })
-            }
-            else {//tra user co trong database
+            } else { //tra user co trong database
                 var _token = this.token(data);
                 data.token = _token;
                 return callback(null, data)

@@ -38,9 +38,9 @@ class LoginPage extends Component {
         // config: { headers: {'Content-Type': 'application/x-www-form-urlencoded' }}
         };
         axios(options).then((data)=>{
-            var {message, username, quyen_hang, token, id} = data.data.detail;
+            var {message, username, quyen_hang, token, id, avatar} = data.data.detail;
             if(message === true){
-                let user = {username, permission: quyen_hang, id};
+                let user = {username, permission: quyen_hang, id, avatar};
                 this.props.Dang_Nhap(user);
                 localStorage.setItem('Login', token);
                 this.props.history.push('/');
@@ -50,6 +50,10 @@ class LoginPage extends Component {
             })
 
         });
+    }
+    componentDidMount = () =>{
+        document.title = "Đăng nhập"
+        console.log(this.props)
     }
     render() {
         return (
