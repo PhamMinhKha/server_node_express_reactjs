@@ -58,6 +58,7 @@ router.get('/auth/facebook/callback',function(req, res, next){
  );
  router.route('/v/:slug').get(C_ViewPage.Index);
  router.route('/view/:slug').get(C_ViewPage.View);
+ router.route('/loadComments').get(C_Comment.loadComments);
  router.post('/upload/comment', kiem_tra_dang_nhap , C_Comment.uploadFile);
  router.post('/submitComment', kiem_tra_dang_nhap , jsonParser , C_Comment.submitComment);
 // .post(passport.authenticate('local', {

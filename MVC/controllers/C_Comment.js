@@ -6,13 +6,38 @@ const command = new ffmpeg();
 const Jimp = require("jimp");
 const commentsModel = require('./../models/commentsModel');
 const path = require('path');
-
+const config = require('./../../config/config');
 // exports.imageChange = function(req, res){
 //   fs.unlink('/public/comments/', (err) => {
 //     if (err) throw err;
 //     console.log('path/file.txt was deleted');
 //   });  
 // }
+exports.loadComments = function (req, res) {
+    var trang = req.query.page;
+    var limit = config.limit;
+    var skip =  (trang - 1) * limit;
+    commentsModel.aggregate([
+        {$project: {ab: {$subtract: ['$commentUpVote','$commentDownVote']}}},
+    ],  function (err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(result)
+        }
+    })
+    var tempArray = [];
+    commentsModel.find({},null ,{skip, limit}, (err, data) => {
+        if(err)
+        {
+            res.json({'error': 'Không kết nối được máy chủ! F5 thử lại'})
+        }
+        else{
+            var data = ({page: parseInt(trang) + 1, comments: data})
+            res.json(data);
+        }
+    })
+}
 exports.submitComment = function (req, res) {
     var fileName = req.body.image;
     var image = null;

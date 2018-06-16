@@ -4,6 +4,7 @@ const config = {
     'connectdb' : 'mongodb://localhost/data',
     'limit': 3,
     'cdnDomain': 'localhost:4000',
+    'limitComment': 10
 }
 
 module.exports = config
